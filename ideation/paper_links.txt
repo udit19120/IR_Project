@@ -7,3 +7,14 @@ https://dl.acm.org/doi/10.1145/3534678.3539164
 https://dl.acm.org/doi/10.1145/3534678.3539170
 https://dl.acm.org/doi/10.1145/3534678.3539215
 https://dl.acm.org/doi/10.1145/3534678.3539053
+
+
+SIGIR papers
+DisenCDR: Learning Disentangled Representations for Cross-Domain Recommendation
+Jiangxia Cao, Xixun Lin, Xin Cong, Jing Ya, Tingwen Liu and Bin Wang
+Structure and Semantics Preserving Document Representations
+Natraj Raman, Sameena Shah and Manuela Veloso
+Generating Clarifying Questions with Web Search Results
+Ziliang Zhao, Zhicheng Dou, Jiaxin Mao and Jirong Wen
+Towards Suicide Ideation Detection Through Online Conversational Context
+Ramit Sawhney, Shivam Agarwal, Atula Tejaswi Neerkaje, Nikolaos Aletras, Preslav Nakov and Lucie Flek
