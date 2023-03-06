@@ -24,7 +24,8 @@
   "seed": 2040,
   "load": false,
   "model_file": null,
+  "sentiment": "sentiment_rating",
   "number_user": 713,
-  "number_item": 3219,
+  "number_item": 3199,
   "model_save_dir": "./saved_models/00"
 }

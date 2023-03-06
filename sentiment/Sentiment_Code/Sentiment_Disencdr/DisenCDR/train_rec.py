@@ -51,6 +51,7 @@ parser.add_argument('--id', type=str, default='00', help='Model ID under which t
 parser.add_argument('--seed', type=int, default=2040)
 parser.add_argument('--load', dest='load', action='store_true', default=False,  help='Load pretrained model.')
 parser.add_argument('--model_file', type=str, help='Filename of the pretrained model.')
+parser.add_argument("--sentiment", type=str, required=True, help="type of sentiment being used")
 
 def seed_everything(seed=1111):
     random.seed(seed)
@@ -76,16 +77,17 @@ seed_everything(opt["seed"])
 
 
 if "DisenCDR" in opt["model"]:
-    filename  = opt["dataset"]
-    source_graph = "../dataset/" + filename + "/train.txt"
+    folderName  = opt["dataset"]
+    fileName = opt["sentiment"]
+    source_graph = f"../dataset/{folderName}/" + "train_"+ fileName + ".txt"
     source_G = GraphMaker(opt, source_graph)
     source_UV = source_G.UV
     source_VU = source_G.VU
     source_adj = source_G.adj
 
-    filename = filename.split("_")
-    filename = filename[1] + "_" + filename[0]
-    target_train_data = "../dataset/" + filename + "/train.txt"
+    folderName = folderName.split("_")
+    folderName = folderName[1] + "_" + folderName[0]
+    target_train_data = f"../dataset/{folderName}/" + "train_"+ fileName + ".txt"
     target_G = GraphMaker(opt, target_train_data)
     target_UV = target_G.UV
     target_VU = target_G.VU
