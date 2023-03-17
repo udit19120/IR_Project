@@ -99,12 +99,12 @@ def get_test_neg(train_dic,test_dic,neg_num,filepath):
         test_neg_f.write(line+'\n')
     test_neg_f.close()
 
-filepath = './cell_sport/'
+filepath = '../Datasets/cellphones.csv'
 # dataset = 'cloth'
 # save_folder = filepath+ 'beauty_cloth/'
 split_init = 0
 
-data,n_items = read_from_file(filepath+'new_reindex.txt')
+data,n_items = read_from_file(filepath)
 data = sorted(data,key=lambda x:x[0])
 data_dic = build_data_dic(data)
 train_dic,test_dic = split_loo(data_dic,filepath)
