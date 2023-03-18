@@ -142,7 +142,7 @@ class CrossTrainer(Trainer):
         user, source_pos_item, source_neg_item, target_pos_item, target_neg_item = self.unpack_batch(batch)
 
         if epoch<10:
-            self.source_user, self.source_item, self.target_user, self.target_item = self.model.wramup(source_UV,source_VU,target_UV,target_VU)
+            self.source_user, self.source_item, self.target_user, self.target_item = self.model.warmup(source_UV,source_VU,target_UV,target_VU)
         else:
             self.source_user, self.source_item, self.target_user, self.target_item = self.model(source_UV,source_VU, target_UV,target_VU)
 

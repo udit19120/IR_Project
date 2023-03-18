@@ -159,7 +159,7 @@ class DataLoader(object):
         #     processed.append([-1] + d)
         for i in range(self.opt['k']):
             for d in self.train_datas[i]:
-                processed.append[[i]+d]
+                processed.append([i]+d)
         return processed
 
     def find_pos(self, ma_list, user):

@@ -150,7 +150,7 @@ class DisenCDR(nn.Module):
 
         return source_learn_user, source_learn_specific_item, target_learn_user, target_learn_specific_item
 
-    def wramup(self, source_UV, source_VU, target_UV, target_VU):
+    def warmup(self, source_UV, source_VU, target_UV, target_VU):
         source_user = self.source_user_embedding(self.source_user_index)
         target_user = self.target_user_embedding(self.target_user_index)
         source_item = self.source_item_embedding(self.source_item_index)
