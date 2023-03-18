@@ -1,0 +1,178 @@
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from model.singleVBGE import singleVBGE
+from model.crossVBGE import crossVBGE
+from torch.distributions.kl import kl_divergence
+from torch.distributions import Normal
+
+
+class DisenCDR(nn.Module):
+    def __init__(self, opt):
+        super(DisenCDR, self).__init__()
+        self.opt = opt
+        self.domain_specific_GNNs = []
+        self.domain_share_GNNs = []
+
+        for i in range(opt['k']):
+            self.domain_specific_GNNs.append(singleVBGE(opt)) 
+            self.domain_share_GNNs.append(singleVBGE(opt)) 
+
+        self.share_GNN = crossVBGE(opt)  # gives q(ZuS|X,Y)
+        self.dropout = opt["dropout"]
+
+        # self.user_embedding = nn.Embedding(opt["source_user_num"], opt["feature_dim"])
+        print('making embeddings')
+
+        self.domain_user_embeddings = []
+        for i in range(opt['k']):
+            self.domain_user_embeddings.append(nn.Embedding(opt[f"fname{i}_user_num"], opt["feature_dim"]))
+            self.domain_item_embeddings.append(nn.Embedding(opt[f"fname{i}_item_num"], opt["feature_dim"]))
+        
+        self.share_mean = nn.Linear(
+            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
+        self.share_sigma = nn.Linear(
+            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
+
+        self.user_index = torch.arange(0, self.opt["fname0_user_num"], 1)
+       
+       self.user_indices = []
+       self.item_indices = []
+       
+       for i in range(opt['k']):
+           self.user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
+           self.item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
+           
+        if self.opt["cuda"]:    #not changed cuz we're poor and we ain't having cuda
+            self.user_index = self.user_index.cuda()
+            self.source_user_index = self.source_user_index.cuda()
+            self.target_user_index = self.target_user_index.cuda()
+            self.source_item_index = self.source_item_index.cuda()
+            self.target_item_index = self.target_item_index.cuda()
+
+    # the below 2 methods deserve to be deleted as the third one is more generalized
+
+    def source_predict_nn(self, user_embedding, item_embedding):
+        fea = torch.cat((user_embedding, item_embedding), dim=-1)
+        out = self.source_predict_1(fea)
+        out = F.relu(out)
+        out = self.source_predict_2(out)
+        out = torch.sigmoid(out)
+        return out
+
+    def target_predict_nn(self, user_embedding, item_embedding):
+        fea = torch.cat((user_embedding, item_embedding), dim=-1)
+        out = self.target_predict_1(fea)
+        out = F.relu(out)
+        out = self.target_predict_2(out)
+        out = torch.sigmoid(out)
+        return out
+    
+    def domain_predict_nns(self, user_embedding, item_embedding):
+        fea = torch.cat((user_embedding, item_embedding), dim=-1)
+        out = self.predict_1(fea)
+        out = F.relu(out)
+        out = self.predict_2(out)
+        out = torch.sigmoid(out)
+        return out
+    
+    # the below 2 methods deserve to be deleted as the third one is more generalized
+
+    def source_predict_dot(self, user_embedding, item_embedding):
+        output = (user_embedding * item_embedding).sum(dim=-1)
+        # return torch.sigmoid(output)
+        return output
+
+    def target_predict_dot(self, user_embedding, item_embedding):
+        output = (user_embedding * item_embedding).sum(dim=-1)
+        # return torch.sigmoid(output)
+        return output
+
+    def domain_predict_dot(self, user_embedding, item_embedding):
+        output = (user_embedding * item_embedding).sum(dim=-1)
+    
+    def _kld_gauss(self, mu_1, logsigma_1, mu_2, logsigma_2):
+        """Using std to compute KLD"""
+        sigma_1 = torch.exp(0.1 + 0.9 * F.softplus(logsigma_1))
+        sigma_2 = torch.exp(0.1 + 0.9 * F.softplus(logsigma_2))
+        # sigma_1 = 0.1 + 0.9 * F.softplus(torch.exp(logsigma_1))
+        # sigma_2 = 0.1 + 0.9 * F.softplus(torch.exp(logsigma_2))
+        q_target = Normal(mu_1, sigma_1)
+        q_context = Normal(mu_2, sigma_2)
+        kl = kl_divergence(q_target, q_context).mean(dim=0).sum()
+        return kl
+
+    def reparameters(self, mean, logstd):
+        # sigma = 0.1 + 0.9 * F.softplus(torch.exp(logstd))
+        sigma = torch.exp(0.1 + 0.9 * F.softplus(logstd))
+        # gaussian_noise = torch.randn(mean.size(0), self.opt["hidden_dim"]).cuda(mean.device)
+        gaussian_noise = torch.randn(mean.size(0), self.opt["hidden_dim"])
+        if self.share_mean.training:
+            sampled_z = gaussian_noise * torch.exp(sigma) + mean
+        else:
+            sampled_z = mean
+        kld_loss = self._kld_gauss(
+            mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
+        return sampled_z, (1 - self.opt["beta"]) * kld_loss
+
+    def forward(self, opt, UVs, VUs):
+        
+        domain_users = []
+        domain_items = []
+        domain_user_shares = []
+        domain_learn_specific
+        for i in range(opt['k']):
+            
+            domain_users.append(self.user_embeddings[i](self.user_index[i]))
+            domain_items.append(self.item_embeddings[i](self.item_index[i]))
+            domain_user_shares.append(self.user_embedding_share(self.user_index[i]))
+            
+            domain_learn_specific_user, domain_learn_specific_item = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
+
+        source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
+            source_user, source_UV, source_VU)
+        target_user_mean, target_user_sigma = self.target_share_GNN.forward_user_share(
+            target_user, target_UV, target_VU)
+
+        mean, sigma, = self.share_GNN(
+            source_user_share, target_user_share, source_UV, source_VU, target_UV, target_VU)
+
+        user_share, share_kld_loss = self.reparameters(mean, sigma)
+
+        source_share_kld = self._kld_gauss(
+            mean, sigma, source_user_mean, source_user_sigma)
+        target_share_kld = self._kld_gauss(
+            mean, sigma, target_user_mean, target_user_sigma)
+
+        self.kld_loss = share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
+            "beta"] * target_share_kld
+
+        # source_learn_user = self.source_merge(torch.cat((user_share, source_learn_specific_user), dim = -1))
+        # target_learn_user = self.target_merge(torch.cat((user_share, target_learn_specific_user), dim = -1))
+        source_learn_user = user_share + source_learn_specific_user
+        target_learn_user = user_share + target_learn_specific_user
+
+        return source_learn_user, source_learn_specific_item, target_learn_user, target_learn_specific_item
+
+    def warmup(self, UVs, VUs, opt):
+        
+        domain_users = []
+        domain_items = []
+
+        for i in range(opt['k']):
+            
+            domain_users.append(self.user_embeddings[i](self.user_index[i]))
+            domain_items.append(self.item_embeddings[i](self.item_index[i]))
+
+        learn_specific_users = []
+        learn_specific_items = []
+        
+        for i in range(opt['k']):
+            a,b = self.specific_GNNs(users, items, UVs, VUs)
+            learn_specific_users.append(a)
+            learn_specific_items.append(b)
+        
+        self.kld_loss = 0
+        
+        return learn_specific_users, learn_specific_items
