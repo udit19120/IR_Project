@@ -7,38 +7,51 @@ from model.crossVBGE import crossVBGE
 from torch.distributions.kl import kl_divergence
 from torch.distributions import Normal
 
+
 class DisenCDR(nn.Module):
     def __init__(self, opt):
         super(DisenCDR, self).__init__()
-        self.opt=opt
+        self.opt = opt
 
         self.source_specific_GNN = singleVBGE(opt)
-        self.source_share_GNN = singleVBGE(opt)
+        self.source_share_GNN = singleVBGE(opt)  # gives q(Z^uS|X)
 
         self.target_specific_GNN = singleVBGE(opt)
-        self.target_share_GNN = singleVBGE(opt)
+        self.target_share_GNN = singleVBGE(opt)  # gives q(Z~uS|Y)
 
-        self.share_GNN = crossVBGE(opt)
+        self.share_GNN = crossVBGE(opt)  # gives q(ZuS|X,Y)
 
         self.dropout = opt["dropout"]
 
         # self.user_embedding = nn.Embedding(opt["source_user_num"], opt["feature_dim"])
         print('making embeddings')
-        self.source_user_embedding = nn.Embedding(opt["source_user_num"], opt["feature_dim"])
-        self.target_user_embedding = nn.Embedding(opt["target_user_num"], opt["feature_dim"])
-        self.source_item_embedding = nn.Embedding(opt["source_item_num"], opt["feature_dim"])
-        self.target_item_embedding = nn.Embedding(opt["target_item_num"], opt["feature_dim"])
-        self.source_user_embedding_share = nn.Embedding(opt["source_user_num"], opt["feature_dim"])
-        self.target_user_embedding_share = nn.Embedding(opt["target_user_num"], opt["feature_dim"])
+        self.source_user_embedding = nn.Embedding(
+            opt["source_user_num"], opt["feature_dim"])
+        self.target_user_embedding = nn.Embedding(
+            opt["target_user_num"], opt["feature_dim"])
+        self.source_item_embedding = nn.Embedding(
+            opt["source_item_num"], opt["feature_dim"])
+        self.target_item_embedding = nn.Embedding(
+            opt["target_item_num"], opt["feature_dim"])
+        self.source_user_embedding_share = nn.Embedding(
+            opt["source_user_num"], opt["feature_dim"])
+        self.target_user_embedding_share = nn.Embedding(
+            opt["target_user_num"], opt["feature_dim"])
 
-        self.share_mean = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
-        self.share_sigma = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
+        self.share_mean = nn.Linear(
+            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
+        self.share_sigma = nn.Linear(
+            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
 
         self.user_index = torch.arange(0, self.opt["source_user_num"], 1)
-        self.source_user_index = torch.arange(0, self.opt["source_user_num"], 1)
-        self.target_user_index = torch.arange(0, self.opt["target_user_num"], 1)
-        self.source_item_index = torch.arange(0, self.opt["source_item_num"], 1)
-        self.target_item_index = torch.arange(0, self.opt["target_item_num"], 1)
+        self.source_user_index = torch.arange(
+            0, self.opt["source_user_num"], 1)
+        self.target_user_index = torch.arange(
+            0, self.opt["target_user_num"], 1)
+        self.source_item_index = torch.arange(
+            0, self.opt["source_item_num"], 1)
+        self.target_item_index = torch.arange(
+            0, self.opt["target_item_num"], 1)
 
         if self.opt["cuda"]:
             self.user_index = self.user_index.cuda()
@@ -73,7 +86,6 @@ class DisenCDR(nn.Module):
         # return torch.sigmoid(output)
         return output
 
-
     def _kld_gauss(self, mu_1, logsigma_1, mu_2, logsigma_2):
         """Using std to compute KLD"""
         sigma_1 = torch.exp(0.1 + 0.9 * F.softplus(logsigma_1))
@@ -94,7 +106,8 @@ class DisenCDR(nn.Module):
             sampled_z = gaussian_noise * torch.exp(sigma) + mean
         else:
             sampled_z = mean
-        kld_loss = self._kld_gauss(mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
+        kld_loss = self._kld_gauss(
+            mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
         return sampled_z, (1 - self.opt["beta"]) * kld_loss
 
     def forward(self, source_UV, source_VU, target_UV, target_VU):
@@ -102,23 +115,32 @@ class DisenCDR(nn.Module):
         target_user = self.target_user_embedding(self.target_user_index)
         source_item = self.source_item_embedding(self.source_item_index)
         target_item = self.target_item_embedding(self.target_item_index)
-        source_user_share = self.source_user_embedding_share(self.source_user_index)
-        target_user_share = self.target_user_embedding_share(self.target_user_index)
+        source_user_share = self.source_user_embedding_share(
+            self.source_user_index)
+        target_user_share = self.target_user_embedding_share(
+            self.target_user_index)
 
-        source_learn_specific_user, source_learn_specific_item = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
-        target_learn_specific_user, target_learn_specific_item = self.target_specific_GNN(target_user, target_item, target_UV, target_VU)
+        source_learn_specific_user, source_learn_specific_item = self.source_specific_GNN(
+            source_user, source_item, source_UV, source_VU)
+        target_learn_specific_user, target_learn_specific_item = self.target_specific_GNN(
+            target_user, target_item, target_UV, target_VU)
 
-        source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(source_user, source_UV, source_VU)
-        target_user_mean, target_user_sigma = self.target_share_GNN.forward_user_share(target_user, target_UV, target_VU)
+        source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
+            source_user, source_UV, source_VU)
+        target_user_mean, target_user_sigma = self.target_share_GNN.forward_user_share(
+            target_user, target_UV, target_VU)
 
-        mean, sigma, = self.share_GNN(source_user_share, target_user_share, source_UV, source_VU, target_UV, target_VU)
+        mean, sigma, = self.share_GNN(
+            source_user_share, target_user_share, source_UV, source_VU, target_UV, target_VU)
 
         user_share, share_kld_loss = self.reparameters(mean, sigma)
 
-        source_share_kld = self._kld_gauss(mean, sigma, source_user_mean, source_user_sigma)
-        target_share_kld = self._kld_gauss(mean, sigma, target_user_mean, target_user_sigma)
+        source_share_kld = self._kld_gauss(
+            mean, sigma, source_user_mean, source_user_sigma)
+        target_share_kld = self._kld_gauss(
+            mean, sigma, target_user_mean, target_user_sigma)
 
-        self.kld_loss =  share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
+        self.kld_loss = share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
             "beta"] * target_share_kld
 
         # source_learn_user = self.source_merge(torch.cat((user_share, source_learn_specific_user), dim = -1))
