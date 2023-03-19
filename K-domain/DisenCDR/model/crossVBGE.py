@@ -26,21 +26,6 @@ class crossVBGE(nn.Module):
         self.encoder = nn.ModuleList(self.encoder)
         self.dropout = opt["dropout"]
 
-    # def forward(self, source_ufea, target_ufea, source_UV_adj, source_VU_adj, target_UV_adj, target_VU_adj):
-    #     learn_user_source = source_ufea
-    #     learn_user_target = target_ufea
-    #     for layer in self.encoder[:-1]:
-    #         learn_user_source = F.dropout(
-    #             learn_user_source, self.dropout, training=self.training)
-    #         learn_user_target = F.dropout(
-    #             learn_user_target, self.dropout, training=self.training)
-    #         learn_user_source, learn_user_target = layer(learn_user_source, learn_user_target, source_UV_adj,
-    #                                                      source_VU_adj, target_UV_adj, target_VU_adj)
-
-    #     mean, sigma, = self.encoder[-1](learn_user_source, learn_user_target, source_UV_adj,
-    #                                     source_VU_adj, target_UV_adj, target_VU_adj)
-    #     return mean, sigma
-
     def forward(self, UFEAs, UVs, VUs):
         for layer in self.encoder[:-1]:
             for i in range(len(UFEAs)):
@@ -83,8 +68,6 @@ class DGCNLayer(nn.Module):
         for i in range(self.opt['k']):
             self.user_union.append(
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
-        # self.source_user_union = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
-        # self.target_user_union = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
 
         self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
 
@@ -92,24 +75,23 @@ class DGCNLayer(nn.Module):
             self.source_rate = self.source_rate.cuda()
 
     def forward(self, UFEAs, UVs, VUs):
-        # source_User_ho = self.gc1(source_ufea, source_VU_adj)
-        # source_User_ho = self.gc3(source_User_ho, source_UV_adj)
-
-        # target_User_ho = self.gc2(target_ufea, target_VU_adj)
-        # target_User_ho = self.gc4(target_User_ho, target_UV_adj)
 
         user_hos = [0 for i in range(self.opt['k'])]
         for i in range(self.opt['k']):
             user_hos[i] = self.gcs_first(UFEAs[i], VUs[i])
             user_hos[i] = self.gcs_second(user_hos[i], UVs[i])
 
-        source_User = torch.cat((source_User_ho, source_ufea), dim=1)
-        source_User = self.source_user_union(source_User)
-        target_User = torch.cat((target_User_ho, target_ufea), dim=1)
-        target_User = self.target_user_union(target_User)
-
-        return self.source_rate * F.relu(source_User) + (1 - self.source_rate) * F.relu(target_User), self.source_rate * F.relu(source_User) + (1 - self.source_rate) * F.relu(target_User)
-
+        user_out = [0 for i in range(self.opt['k'])]
+        for i in range(self.opt['k']):
+            user_out[i] = torch.cat((user_hos[i], UFEAs[i]), dim=1)
+            user_out[i] = self.user_union[i](source_User)
+         
+        val = 0
+        for i in range(len(user_out))
+            for j in range(i+1, len(user_out))
+                val += self.source_rate * F.relu(user_out[i]) + (1-self.source_rate) * F.relu(user_out[j])
+       
+       return val, val
 
 class LastLayer(nn.Module):
     """
@@ -158,14 +140,21 @@ class LastLayer(nn.Module):
             dropout=opt["dropout"],
             alpha=opt["leakey"]
         )
-        self.source_user_union_mean = nn.Linear(
-            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
-        self.source_user_union_logstd = nn.Linear(
-            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
-        self.target_user_union_mean = nn.Linear(
-            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
-        self.target_user_union_logstd = nn.Linear(
-            opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
+
+        self.gcs_first = [GCN(nfeat=opt["feature_dim"], nhid=opt["hidden_dim"],
+                              dropout=opt["dropout"], alpha=opt["leakey"]) for _ in range(self.opt['k'])]
+        self.gcs_second_mean = [GCN(nfeat=opt["hidden_dim"], nhid=opt["feature_dim"],
+                               dropout=opt["dropout"], alpha=opt["leakey"]) for _ in range(self.opt['k'])]
+        self.gcs_second_logstd = [GCN(nfeat=opt["hidden_dim"], nhid=opt["feature_dim"],
+                               dropout=opt["dropout"], alpha=opt["leakey"]) for _ in range(self.opt['k'])]
+                                
+        self.user_union_mean = []
+        self.user_union_logstd = []
+        for i in range(self.opt['k']):
+            self.user_union_mean.append(
+                nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
+            self.user_union_logstd.append(
+                nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
         self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
 
@@ -196,30 +185,32 @@ class LastLayer(nn.Module):
             mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
         return sampled_z, kld_loss
 
-    def forward(self, source_ufea, target_ufea, source_UV_adj, source_VU_adj, target_UV_adj, target_VU_adj):
-        source_User_ho = self.gc1(source_ufea, source_VU_adj)
-        source_User_ho_mean = self.gc3_mean(source_User_ho, source_UV_adj)
-        source_User_ho_logstd = self.gc3_logstd(source_User_ho, source_UV_adj)
+   def forward(self, UFEAs, UVs, VUs):
+        user_hos_mean = [0 for i in range(self.opt['k'])]
+        user_hos_logstd = [0 for i in range(self.opt['k'])]
+    
+        for i in range(self.opt['k']):
+            user_hos_mean[i] = self.gcs_first(UFEAs[i], VUs[i])
+            user_hos_mean[i] = self.gcs_second_mean(user_hos_mean[i], UVs[i])
+        
+            user_hos_logstd[i] = self.gcs_second_logstd(user_hos_logstd[i], UVs[i])
+    
+        user_means = [0 for i in range(self.opt['k'])]
+        user_logstds = [0 for i in range(self.opt['k'])]
+    
+        for i in range(self.opt['k']):
+            user_means[i] = torch.cat((user_hos_mean[i], UFEAs[i]), dim=1)
+            user_means[i] = self.user_union_mean[i](user_means[i])
+        
+            user_logstds[i] = torch.cat((user_hos_logstd[i], UFEAs[i]), dim=1)
+            user_logstds[i] = self.user_union_logstd[i](user_logstds[i])
+    
+        val_mean = 0
+        val_logstd = 0
+    
+        for i in range(len(user_means)):
+            for j in range(i+1, len(user_means)):
+                val_mean += self.source_rate * user_means[i] + (1 - self.source_rate) * user_means[j]
+                val_logstd += self.source_rate * user_logstds[i] + (1 - self.source_rate) * user_logstds[j]
 
-        target_User_ho = self.gc2(target_ufea, target_VU_adj)
-        target_User_ho_mean = self.gc4_mean(target_User_ho, target_UV_adj)
-        target_User_ho_logstd = self.gc4_logstd(target_User_ho, target_UV_adj)
-
-        source_User_mean = torch.cat(
-            (source_User_ho_mean, source_ufea), dim=1)
-        source_User_mean = self.source_user_union_mean(source_User_mean)
-
-        source_User_logstd = torch.cat(
-            (source_User_ho_logstd, source_ufea), dim=1)
-        source_User_logstd = self.source_user_union_logstd(source_User_logstd)
-
-        target_User_mean = torch.cat(
-            (target_User_ho_mean, target_ufea), dim=1)
-        target_User_mean = self.target_user_union_mean(target_User_mean)
-
-        target_User_logstd = torch.cat(
-            (target_User_ho_logstd, target_ufea),
-            dim=1)
-        target_User_logstd = self.target_user_union_logstd(target_User_logstd)
-
-        return self.source_rate * source_User_mean + (1 - self.source_rate) * target_User_mean, self.source_rate * source_User_logstd + (1 - self.source_rate) * target_User_logstd
+        return val_mean, val_logstd
