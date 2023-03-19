@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
-from model.trainer import CrossTrainer
+from model.trainercopy import CrossTrainer
 from mutils.loader import DataLoader
 from mutils.GraphMaker import GraphMaker
 from mutils import torch_utils, helper

@@ -131,7 +131,7 @@ class DataLoader(object):
         # return ret
         ret = []
         tot_len = 0
-        for ma_set in self.ma_sets:
+        for ma_set in self.ma_sets: #ma_set has k elements where ma_sets[j][i] = set of items user i interacted with in domain j.
             tot_len += len(ma_set)
 
         for i in range(len(self.ma_sets[0])):
@@ -222,7 +222,7 @@ class DataLoader(object):
                         pos_tmps[i].append(b[2])
                     else:
                         pos_tmps[i].append(self.find_pos(self.ma_lists[i], b[1]))
-                    neg_tmps[i].append(self.find_neg(self.ma_sets))
+                    neg_tmps[i].append(self.find_neg(self.ma_sets[i], b[1], f"fname{i}_item_num"))
                 user.append(b[1])
             # return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
             return (torch.LongTensor(user), [torch.LongTensor(pos_temp) for pos_temp in pos_tmps], [torch.LongTensor(neg_temp) for neg_temp in neg_tmps])

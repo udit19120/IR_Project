@@ -75,13 +75,12 @@ class CrossTrainer(Trainer):
             target_pos_item = inputs[3]
             target_neg_item = inputs[4]
         else:
-            inputs = [Variable(b) for b in batch]
-            user = inputs[0]
-            source_pos_item = inputs[1]
-            source_neg_item = inputs[2]
-            target_pos_item = inputs[3]
-            target_neg_item = inputs[4]
-        return user, source_pos_item, source_neg_item, target_pos_item, target_neg_item
+            inputs = batch
+            # inputs = [Variable(b) for b in batch]
+            user = Variable(inputs[0])
+            pos_items = [Variable(p) for p in inputs[1]]
+            neg_items = [Variable(n) for n in inputs[2]]
+        return user, pos_items, neg_items
 
     def HingeLoss(self, pos, neg):
         gamma = torch.tensor(self.opt["margin"])
@@ -139,7 +138,7 @@ class CrossTrainer(Trainer):
         self.model.train()
         self.optimizer.zero_grad()
 
-        user, source_pos_item, source_neg_item, target_pos_item, target_neg_item = self.unpack_batch(batch)
+        user, pos_items, neg_items = self.unpack_batch(batch)
 
         if epoch<10:
             self.source_user, self.source_item, self.target_user, self.target_item = self.model.warmup(source_UV,source_VU,target_UV,target_VU)

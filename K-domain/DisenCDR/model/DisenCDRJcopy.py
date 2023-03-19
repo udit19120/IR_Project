@@ -117,63 +117,73 @@ class DisenCDR(nn.Module):
             mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
         return sampled_z, (1 - self.opt["beta"]) * kld_loss
 
-    def forward(self, opt, UVs, VUs):
+    def forward(self, UVs, VUs):
         
         domain_users = []
         domain_items = []
         domain_user_shares = []
         domain_learn_specific_users = []
         domain_learn_specific_items = []
-        for i in range(opt['k']):
+        domain_user_means = []
+        domain_user_sigmas = []
+        
+        for i in range(self.opt['k']):
             
             domain_users.append(self.domain_user_embeddings[i](self.domain_user_index[i]))
             domain_items.append(self.domain_item_embeddings[i](self.domain_item_index[i]))
             domain_user_shares.append(self.domain_user_embedding_share(self.domain_user_index[i]))
-            a, b = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
+            a, b = self.domain_specific_GNNs[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
             domain_learn_specific_user.append(a)
             domain_learn_specific_item.append(b)
-            domain_learn_specific_user, domain_learn_specific_item = domain_specific_GNN(domain_users, domain_items, UVs, VUs)
+            # domain_learn_specific_user, domain_learn_specific_item = domain_specific_GNN[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
+            a, b = self.domain_share_GNNs[i].forward_user_share(domain_users[i], UVs[i], VUs[i])
+            domain_user_means.append(a)
+            domain_user_sigmas.append(b)
+             
+        # source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
+        #     source_user, source_UV, source_VU)
+        # target_user_mean, target_user_sigma = self.target_share_GNN.forward_user_share(
+        #     target_user, target_UV, target_VU)
 
-        source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
-            source_user, source_UV, source_VU)
-        target_user_mean, target_user_sigma = self.target_share_GNN.forward_user_share(
-            target_user, target_UV, target_VU)
-
-        mean, sigma, = self.share_GNN(
-            source_user_share, target_user_share, source_UV, source_VU, target_UV, target_VU)
+        mean, sigma, = self.share_GNN(domain_user_shares, UVs, VUs)
 
         user_share, share_kld_loss = self.reparameters(mean, sigma)
 
-        source_share_kld = self._kld_gauss(
-            mean, sigma, source_user_mean, source_user_sigma)
-        target_share_kld = self._kld_gauss(
-            mean, sigma, target_user_mean, target_user_sigma)
-
-        self.kld_loss = share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
-            "beta"] * target_share_kld
+        domain_share_klds = []
+        self.kld_loss = share_kld_loss
+        for i in range(self.opt['k']):
+            domain_share_kld = self._kld_gauss(mean, sigma, domain_user_means[i], domain_specific_sigmas[i])
+            self.kld_loss += self.opt['beta']*domain_share_kld
+        
+        # self.kld_loss = share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
+        #     "beta"] * target_share_kld
 
         # source_learn_user = self.source_merge(torch.cat((user_share, source_learn_specific_user), dim = -1))
         # target_learn_user = self.target_merge(torch.cat((user_share, target_learn_specific_user), dim = -1))
-        source_learn_user = user_share + source_learn_specific_user
-        target_learn_user = user_share + target_learn_specific_user
+        
+        domain_learn_users = []
+        for i in range(self.opt['k']):
+            domain_learn_users.append(user_share + domain_learn_specific_user[i])
+        # source_learn_user = 
+        # target_learn_user = user_share + target_learn_specific_user
 
-        return source_learn_user, source_learn_specific_item, target_learn_user, target_learn_specific_item
+        return domain_learn_users, domain_learn_specific_items
 
-    def warmup(self, UVs, VUs, opt):
+    def warmup(self, UVs, VUs):
         
         domain_users = []
         domain_items = []
 
-        for i in range(opt['k']):
+        for i in range(self.opt['k']):
             
-            domain_users.append(self.user_embeddings[i](self.user_index[i]))
-            domain_items.append(self.item_embeddings[i](self.item_index[i]))
+            domain_users.append(self.domain_user_embeddings[i](self.domain_user_indices[i]))
+            domain_items.append(self.domain_item_embeddings[i](self.domain_item_indices[i]))
 
         learn_specific_users = []
         learn_specific_items = []
         
-        for i in range(opt['k']):
-            a,b = self.specific_GNNs(users, items, UVs, VUs)
+        for i in range(self.opt['k']):
+            a,b = self.domain_specific_GNNs[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
             learn_specific_users.append(a)
             learn_specific_items.append(b)
         

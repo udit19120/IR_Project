@@ -70,7 +70,7 @@ class DGCNLayer(nn.Module):
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
         self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
-
+        print("hewwo", self.source_rate.shape)
         if self.opt["cuda"]:
             self.source_rate = self.source_rate.cuda()
 

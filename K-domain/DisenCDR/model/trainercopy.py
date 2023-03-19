@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from model.DisenCDR import DisenCDR
+from model.DisenCDRJcopy import DisenCDR
 from mutils import torch_utils
 
 class Trainer(object):
@@ -68,16 +68,26 @@ class CrossTrainer(Trainer):
 
     def unpack_batch(self, batch):
         if self.opt["cuda"]:
-            inputs = [Variable(b.cuda()) for b in batch]
-            user = inputs[0]
-            pos_item = inputs[1]
-            neg_item = inputs[2]
+            # inputs = [Variable(b.cuda()) for b in batch]
+            # user = inputs[0]
+            # pos_item = inputs[1]
+            # neg_item = inputs[2]
+            inputs = batch
+            user = Variable(inputs[0].cuda())
+            pos_items = [Variable(p.cuda()) for p in inputs[1]]
+            neg_items = [Variable(n.cuda()) for n in inputs[2]]
         else:
-            inputs = [Variable(b) for b in batch]
-            user = inputs[0]
-            pos_item = inputs[1]
-            neg_item = inputs[2]
-        return user, pos_item, neg_item
+        #     inputs = [Variable(b) for b in batch]
+        #     user = inputs[0]
+        #     pos_item = inputs[1]
+        #     neg_item = inputs[2]
+        # return user, pos_item, neg_item
+            inputs = batch
+            # inputs = [Variable(b) for b in batch]
+            user = Variable(inputs[0])
+            pos_items = [Variable(p) for p in inputs[1]]
+            neg_items = [Variable(n) for n in inputs[2]]
+        return user, pos_items, neg_items
 
     def HingeLoss(self, pos, neg):
         gamma = torch.tensor(self.opt["margin"])
