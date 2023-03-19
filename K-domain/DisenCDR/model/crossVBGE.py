@@ -87,11 +87,11 @@ class DGCNLayer(nn.Module):
             user_out[i] = self.user_union[i](source_User)
          
         val = 0
-        for i in range(len(user_out))
-            for j in range(i+1, len(user_out))
+        for i in range(len(user_out)):
+            for j in range(i+1, len(user_out)):
                 val += self.source_rate * F.relu(user_out[i]) + (1-self.source_rate) * F.relu(user_out[j])
        
-       return val, val
+        return val
 
 class LastLayer(nn.Module):
     """
@@ -185,7 +185,7 @@ class LastLayer(nn.Module):
             mean, logstd, torch.zeros_like(mean), torch.ones_like(logstd))
         return sampled_z, kld_loss
 
-   def forward(self, UFEAs, UVs, VUs):
+    def forward(self, UFEAs, UVs, VUs):
         user_hos_mean = [0 for i in range(self.opt['k'])]
         user_hos_logstd = [0 for i in range(self.opt['k'])]
     

@@ -130,7 +130,7 @@ print('Data loaded of train batch')
 dev_batches = []
 for i in range(opt['k']):
     dev_batches.append(DataLoader(
-        fnames[i], opt["batch_size"], opt, evaluation=i))
+        fnames, opt["batch_size"], opt, evaluation=i))
     print('Data loaded of dev batch for domain', i)
 
 # source_dev_batch = DataLoader(fnames, opt["batch_size"], opt, evaluation = 1)

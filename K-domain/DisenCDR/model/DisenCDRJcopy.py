@@ -25,6 +25,8 @@ class DisenCDR(nn.Module):
         print('making embeddings')
 
         self.domain_user_embeddings = []
+        self.domain_item_embeddings = []
+        
         for i in range(opt['k']):
             self.domain_user_embeddings.append(nn.Embedding(opt[f"fname{i}_user_num"], opt["feature_dim"]))
             self.domain_item_embeddings.append(nn.Embedding(opt[f"fname{i}_item_num"], opt["feature_dim"]))
@@ -36,19 +38,19 @@ class DisenCDR(nn.Module):
 
         self.user_index = torch.arange(0, self.opt["fname0_user_num"], 1)
        
-       self.user_indices = []
-       self.item_indices = []
-       
-       for i in range(opt['k']):
-           self.domain_user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
-           self.domain_item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
-           
-        if self.opt["cuda"]:    #not changed cuz we're poor and we ain't having cuda
-            self.user_index = self.user_index.cuda()
-            self.source_user_index = self.source_user_index.cuda()
-            self.target_user_index = self.target_user_index.cuda()
-            self.source_item_index = self.source_item_index.cuda()
-            self.target_item_index = self.target_item_index.cuda()
+        self.domain_user_indices = []
+        self.domain_item_indices = []
+        
+        for i in range(opt['k']):
+            self.domain_user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
+            self.domain_item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
+            
+            if self.opt["cuda"]:    #not changed cuz we're poor and we ain't having cuda
+                self.user_index = self.user_index.cuda()
+                self.source_user_index = self.source_user_index.cuda()
+                self.target_user_index = self.target_user_index.cuda()
+                self.source_item_index = self.source_item_index.cuda()
+                self.target_item_index = self.target_item_index.cuda()
 
     # the below 2 methods deserve to be deleted as the third one is more generalized
 
@@ -130,7 +132,7 @@ class DisenCDR(nn.Module):
             a, b = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
             domain_learn_specific_user.append(a)
             domain_learn_specific_item.append(b)
-            domain_learn_specific_user, domain_learn_specific_item = 
+            domain_learn_specific_user, domain_learn_specific_item = domain_specific_GNN(domain_users, domain_items, UVs, VUs)
 
         source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
             source_user, source_UV, source_VU)

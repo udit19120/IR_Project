@@ -15,7 +15,6 @@ class DataLoader(object):
     """
 
     def __init__(self, fnames, batch_size, opt, evaluation):
-        print(fnames)
         self.batch_size = batch_size
         self.opt = opt
         self.eval = evaluation
@@ -26,7 +25,7 @@ class DataLoader(object):
         self.test_datas = []
         self.users = []
         self.items = []
-
+        
         for i in range(opt['k']):
 
             train_data = "../dummy-dataset/" + fnames[i] + "/train.txt"
@@ -140,21 +139,23 @@ class DataLoader(object):
         return ret  # Wrong
 
     def preprocess_for_predict(self):
-        processed = []
-        if self.eval == 1:
-            for d in self.source_test_data:
-                # user, item_list(pos in the first node)
-                processed.append([d[0], d[1]])
-        else:
-            for d in self.target_test_data:
-                # user, item_list(pos in the first node)
-                processed.append([d[0], d[1]])
-        return processed
+        # processed = []
+        # if self.eval == 1:
+        #     for d in self.source_test_data:
+        #         # user, item_list(pos in the first node)
+        #         processed.append([d[0], d[1]])
+        # else:
+        #     for d in self.target_test_data:
+        #         # user, item_list(pos in the first node)
+        #         processed.append([d[0], d[1]])
+        # return processed
+        return [1,2]
+        # pass
 
     def preprocess(self):
         """ Preprocess the data and convert to ids. """
         processed = []
-        print(self.train_datas[0])
+        # print(self.train_datas[0])
 
         # for d in self.source_train_data:
         #     d = [d[1], d[0]]
@@ -216,11 +217,11 @@ class DataLoader(object):
                 #     self.source_ma_set, b[1], "source_item_num"))
                 # target_neg_tmp.append(self.find_neg(
                 #     self.target_ma_set, b[1], "target_item_num"))
-                for i in range(len(self.opt['k'])):
+                for i in range(self.opt['k']):
                     if(b[0] == i):
                         pos_tmps[i].append(b[2])
                     else:
-                        pos_tmps[i].append(self.ma_lists, b[1])
+                        pos_tmps[i].append(self.find_pos(self.ma_lists[i], b[1]))
                     neg_tmps[i].append(self.find_neg(self.ma_sets))
                 user.append(b[1])
             # return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))

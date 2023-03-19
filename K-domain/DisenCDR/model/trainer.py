@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from model.DisenCDR import DisenCDR
+from model.DisenCDRJcopy import DisenCDR
 from mutils import torch_utils
 
 class Trainer(object):
