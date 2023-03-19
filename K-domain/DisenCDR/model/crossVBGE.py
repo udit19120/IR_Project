@@ -26,20 +26,20 @@ class crossVBGE(nn.Module):
         self.encoder = nn.ModuleList(self.encoder)
         self.dropout = opt["dropout"]
 
-    def forward(self, source_ufea, target_ufea, source_UV_adj, source_VU_adj, target_UV_adj, target_VU_adj):
-        learn_user_source = source_ufea
-        learn_user_target = target_ufea
-        for layer in self.encoder[:-1]:
-            learn_user_source = F.dropout(
-                learn_user_source, self.dropout, training=self.training)
-            learn_user_target = F.dropout(
-                learn_user_target, self.dropout, training=self.training)
-            learn_user_source, learn_user_target = layer(learn_user_source, learn_user_target, source_UV_adj,
-                                                         source_VU_adj, target_UV_adj, target_VU_adj)
+    # def forward(self, source_ufea, target_ufea, source_UV_adj, source_VU_adj, target_UV_adj, target_VU_adj):
+    #     learn_user_source = source_ufea
+    #     learn_user_target = target_ufea
+    #     for layer in self.encoder[:-1]:
+    #         learn_user_source = F.dropout(
+    #             learn_user_source, self.dropout, training=self.training)
+    #         learn_user_target = F.dropout(
+    #             learn_user_target, self.dropout, training=self.training)
+    #         learn_user_source, learn_user_target = layer(learn_user_source, learn_user_target, source_UV_adj,
+    #                                                      source_VU_adj, target_UV_adj, target_VU_adj)
 
-        mean, sigma, = self.encoder[-1](learn_user_source, learn_user_target, source_UV_adj,
-                                        source_VU_adj, target_UV_adj, target_VU_adj)
-        return mean, sigma
+    #     mean, sigma, = self.encoder[-1](learn_user_source, learn_user_target, source_UV_adj,
+    #                                     source_VU_adj, target_UV_adj, target_VU_adj)
+    #     return mean, sigma
 
     def forward(self, UFEAs, UVs, VUs):
         for layer in self.encoder[:-1]:

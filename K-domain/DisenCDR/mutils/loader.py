@@ -126,6 +126,10 @@ class DataLoader(object):
         return ma, ma_list, train_data, test_data, user, item
 
     def rate(self):
+        # ret = []
+        # for i in range(len(self.source_ma_set)):
+        #     ret = len(self.source_ma_set[i]) / (len(self.source_ma_set[i]) + len(self.target_ma_set[i]))
+        # return ret
         ret = []
         tot_len = 0
         for ma_set in self.ma_sets:
@@ -133,7 +137,7 @@ class DataLoader(object):
 
         for i in range(len(self.ma_sets[0])):
             ret = len(self.ma_sets[0][i]) / tot_len
-        return ret
+        return ret  # Wrong
 
     def preprocess_for_predict(self):
         processed = []

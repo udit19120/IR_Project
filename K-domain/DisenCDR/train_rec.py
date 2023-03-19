@@ -25,33 +25,51 @@ parser = argparse.ArgumentParser()
 # parser.add_argument('--dataset', type=str, default='phone_electronic, sport_phone, sport_cloth, electronic_cloth, ', help='')
 parser.add_argument('--k', type=int, default=2, help='')
 # model part
-parser.add_argument('--model', type=str, default="DisenCDR", help="The model name.")
-parser.add_argument('--feature_dim', type=int, default=128, help='Initialize network embedding dimension.')
-parser.add_argument('--hidden_dim', type=int, default=128, help='GNN network hidden embedding dimension.')
+parser.add_argument('--model', type=str, default="DisenCDR",
+                    help="The model name.")
+parser.add_argument('--feature_dim', type=int, default=128,
+                    help='Initialize network embedding dimension.')
+parser.add_argument('--hidden_dim', type=int, default=128,
+                    help='GNN network hidden embedding dimension.')
 parser.add_argument('--GNN', type=int, default=2, help='GNN layer.')
 
-parser.add_argument('--dropout', type=float, default=0.3, help='GNN layer dropout rate.')
+parser.add_argument('--dropout', type=float, default=0.3,
+                    help='GNN layer dropout rate.')
 parser.add_argument('--optim', choices=['sgd', 'adagrad', 'adam', 'adamax'], default='adam',
                     help='Optimizer: sgd, adagrad, adam or adamax.')
-parser.add_argument('--lr', type=float, default=0.001, help='Applies to sgd and adagrad.')
-parser.add_argument('--lr_decay', type=float, default=0.9, help='Learning rate decay rate.')
-parser.add_argument('--weight_decay', type=float, default=5e-4, help='Weight decay (L2 loss on parameters).')
-parser.add_argument('--decay_epoch', type=int, default=10, help='Decay learning rate after this epoch.')
+parser.add_argument('--lr', type=float, default=0.001,
+                    help='Applies to sgd and adagrad.')
+parser.add_argument('--lr_decay', type=float, default=0.9,
+                    help='Learning rate decay rate.')
+parser.add_argument('--weight_decay', type=float, default=5e-4,
+                    help='Weight decay (L2 loss on parameters).')
+parser.add_argument('--decay_epoch', type=int, default=10,
+                    help='Decay learning rate after this epoch.')
 parser.add_argument('--leakey', type=float, default=0.1)
 parser.add_argument('--cpu', action='store_true', help='Ignore CUDA.')
 parser.add_argument('--cuda', type=bool, default=torch.cuda.is_available())
 parser.add_argument('--beta', type=float, default=0.9)
 # train part
-parser.add_argument('--num_epoch', type=int, default=50, help='Number of total training epochs.')
-parser.add_argument('--batch_size', type=int, default=1024, help='Training batch size.')
-parser.add_argument('--log_step', type=int, default=200, help='Print log every k steps.')
-parser.add_argument('--log', type=str, default='logs.txt', help='Write training log to file.')
-parser.add_argument('--save_epoch', type=int, default=100, help='Save model checkpoints every k epochs.')
-parser.add_argument('--save_dir', type=str, default='./saved_models', help='Root dir for saving models.')
-parser.add_argument('--id', type=str, default='00', help='Model ID under which to save models.')
+parser.add_argument('--num_epoch', type=int, default=50,
+                    help='Number of total training epochs.')
+parser.add_argument('--batch_size', type=int, default=1024,
+                    help='Training batch size.')
+parser.add_argument('--log_step', type=int, default=200,
+                    help='Print log every k steps.')
+parser.add_argument('--log', type=str, default='logs.txt',
+                    help='Write training log to file.')
+parser.add_argument('--save_epoch', type=int, default=100,
+                    help='Save model checkpoints every k epochs.')
+parser.add_argument('--save_dir', type=str,
+                    default='./saved_models', help='Root dir for saving models.')
+parser.add_argument('--id', type=str, default='00',
+                    help='Model ID under which to save models.')
 parser.add_argument('--seed', type=int, default=2040)
-parser.add_argument('--load', dest='load', action='store_true', default=False,  help='Load pretrained model.')
-parser.add_argument('--model_file', type=str, help='Filename of the pretrained model.')
+parser.add_argument('--load', dest='load', action='store_true',
+                    default=False,  help='Load pretrained model.')
+parser.add_argument('--model_file', type=str,
+                    help='Filename of the pretrained model.')
+
 
 def seed_everything(seed=1111):
     random.seed(seed)
@@ -79,10 +97,10 @@ if "DisenCDR" in opt["model"]:
     UV = []
     VU = []
     adj = []
-    fnames = ['sport','cloth','phone']
+    fnames = ['sport', 'cloth', 'phone']
 
     for i in range(opt['k']):
-        filename  = fnames[i]
+        filename = fnames[i]
         source_graph = "../dummy-dataset/" + filename + "/train.txt"
         g = GraphMaker(opt, source_graph)
         G += [g]
@@ -105,28 +123,34 @@ file_logger = helper.FileLogger(model_save_dir + '/' + opt['log'],
 # print model info
 helper.print_config(opt)
 
-print("Loading data from {} with batch size {}...".format(fnames, opt['batch_size'])) # Generalised till here - Jahnvi
-train_batch = DataLoader(fnames, opt['batch_size'], opt, evaluation = -1)   
+print("Loading data from {} with batch size {}...".format(
+    fnames, opt['batch_size']))  # Generalised till here - Jahnvi
+train_batch = DataLoader(fnames, opt['batch_size'], opt, evaluation=-1)
 print('Data loaded of train batch')
-source_dev_batch = DataLoader(fnames, opt["batch_size"], opt, evaluation = 1)
-print('Data loaded of source dev batch')
-target_dev_batch = DataLoader(fnames, opt["batch_size"], opt, evaluation = 2)
-print('Data loaded of target dev batch')
+dev_batches = []
+for i in range(opt['k']):
+    dev_batches.append(DataLoader(
+        fnames[i], opt["batch_size"], opt, evaluation=i))
+    print('Data loaded of dev batch for domain', i)
+
+# source_dev_batch = DataLoader(fnames, opt["batch_size"], opt, evaluation = 1)
+# print('Data loaded of source dev batch')
+# target_dev_batch = DataLoader(fnames, opt["batch_size"], opt, evaluation = 2)
+# print('Data loaded of target dev batch')
 
 
-print("user_num", opt["source_user_num"])
-print("source_item_num", opt["source_item_num"])
-print("target_item_num", opt["target_item_num"])
-print("source train data : {}, target train data {}, source test data : {}, source test data : {}".format(len(train_batch.source_train_data),len(train_batch.target_train_data),len(train_batch.source_test_data),len(train_batch.target_test_data)))
+print("user_num", opt["fname0_user_num"])
+for i in range(opt['k']):
+    print(f"item_num_domain{i}", opt[f"fname{i}_item_num"])
+    print("train data file{} : {}, test data file{} : {}".format(i, len(
+        train_batch.train_datas[i]), i, len(train_batch.test_datas[i])))
+# print("target_item_num", opt["target_item_num"])
 
 if opt["cuda"]:
-    source_UV = source_UV.cuda()
-    source_VU = source_VU.cuda()
-    source_adj = source_adj.cuda()
-
-    target_UV = target_UV.cuda()
-    target_VU = target_VU.cuda()
-    target_adj = target_adj.cuda()
+    for i in range(opt['k']):
+        UV[i] = UV[i].cuda()
+        VU[i] = VU[i].cuda()
+        adj[i] = adj[i].cuda()
 
 # model
 if not opt['load']:
@@ -154,13 +178,14 @@ for epoch in range(1, opt['num_epoch'] + 1):
     start_time = time.time()
     for i, batch in enumerate(train_batch):
         global_step += 1
-        loss = trainer.reconstruct_graph(batch, source_UV, source_VU, target_UV, target_VU, source_adj, target_adj, epoch)
+        loss = trainer.reconstruct_graph(
+            batch, UV, VU, adj, epoch)
         train_loss += loss
 
     duration = time.time() - start_time
     train_loss = train_loss/len(train_batch)
-    print(format_str.format(datetime.now(), global_step, max_steps, epoch, \
-                                    opt['num_epoch'], train_loss, duration, current_lr))
+    print(format_str.format(datetime.now(), global_step, max_steps, epoch,
+                            opt['num_epoch'], train_loss, duration, current_lr))
 
     # if epoch % 10:
     #     # pass
@@ -168,51 +193,40 @@ for epoch in range(1, opt['num_epoch'] + 1):
 
     # eval model
     print("Evaluating on dev set...")
-    trainer.model.eval()    #ChatGPT: model.eval() disables dropout and batch normalization layer during inference ensuring model's behavior is consistent during training and inference.
+    # ChatGPT: model.eval() disables dropout and batch normalization layer during inference ensuring model's behavior is consistent during training and inference.
+    trainer.model.eval()
 
-    trainer.evaluate_embedding(source_UV, source_VU, target_UV, target_VU, source_adj, target_adj)
+    trainer.evaluate_embedding(
+        UV, VU, adj)
 
-    NDCG = 0.0
-    HT = 0.0
-    valid_entity = 0.0
-    for i, batch in enumerate(source_dev_batch):
-        predictions = trainer.source_predict(batch)
-        for pred in predictions:
-            rank = (-pred).argsort().argsort()[0].item()
+    ndcgs = []
+    hits = []
+    for i in range(opt['k']):
+        NDCG = 0.0
+        HT = 0.0
+        valid_entity = 0.0
+        for j, batch in enumerate(dev_batches[i]):
+            predictions = trainer.source_predict(batch)
+            for pred in predictions:
+                rank = (-pred).argsort().argsort()[0].item()
 
-            valid_entity += 1
-            if rank < 10:
-                NDCG += 1 / np.log2(rank + 2)
-                HT += 1
-            if valid_entity % 100 == 0:
-                print('.', end='')
+                valid_entity += 1
+                if rank < 10:
+                    NDCG += 1 / np.log2(rank + 2)
+                    HT += 1
+                if valid_entity % 100 == 0:
+                    print('.', end='')
 
-    s_ndcg = NDCG / valid_entity
-    s_hit = HT / valid_entity
-
-    NDCG = 0.0
-    HT = 0.0
-    valid_entity = 0.0
-    for i, batch in enumerate(target_dev_batch):
-        predictions = trainer.target_predict(batch)
-        for pred in predictions:
-            rank = (-pred).argsort().argsort()[0].item()
-
-            valid_entity += 1
-
-            if rank < 10:
-                NDCG += 1 / np.log2(rank + 2)
-                HT += 1
-            if valid_entity % 100 == 0:
-                print('.', end='')
-    t_ndcg = NDCG / valid_entity
-    t_hit = HT / valid_entity
+        ndcgs.append(NDCG / valid_entity)
+        hits.append(HT / valid_entity)
 
     print(
-        "epoch {}: train_loss = {:.6f}, source_hit = {:.4f}, source_ndcg = {:.4f}, target_hit = {:.4f}, target_ndcg = {:.4f}".format(
-            epoch, \
-            train_loss, s_hit, s_ndcg, t_hit, t_ndcg))
-    dev_score = t_ndcg
+        "epoch {}: train_loss = {:.6f}".format(
+            epoch,
+            train_loss))
+    for i in range(opt['k']):
+        print("domain {} NDCG: {} HIT: {}".format(i, ndcgs[i], hits[i]))
+    dev_score = ndcgs[0]
     print(max([dev_score] + dev_score_history))
     file_logger.log(
         "{}\t{:.6f}\t{:.4f}\t{:.4f}".format(epoch, train_loss, dev_score, max([dev_score] + dev_score_history)))
