@@ -84,7 +84,7 @@ class DGCNLayer(nn.Module):
         user_out = [0 for i in range(self.opt['k'])]
         for i in range(self.opt['k']):
             user_out[i] = torch.cat((user_hos[i], UFEAs[i]), dim=1)
-            user_out[i] = self.user_union[i](source_User)
+            user_out[i] = self.user_union[i]
          
         val = 0
         for i in range(len(user_out)):
@@ -207,6 +207,8 @@ class LastLayer(nn.Module):
     
         val_mean = 0
         val_logstd = 0
+        
+ 
     
         for i in range(len(user_means)):
             for j in range(i+1, len(user_means)):

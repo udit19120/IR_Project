@@ -140,6 +140,8 @@ class LastLayer(nn.Module):
             dropout=opt["dropout"],
             alpha=opt["leakey"]
         )
+        
+        # k means and k stds linear layers
         self.source_user_union_mean = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
         self.source_user_union_logstd = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
         self.target_user_union_mean = nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
@@ -174,17 +176,17 @@ class LastLayer(nn.Module):
         return sampled_z, kld_loss
 
     def forward(self, source_ufea, target_ufea, source_UV_adj, source_VU_adj, target_UV_adj, target_VU_adj):
-        source_User_ho = self.gc1(source_ufea, source_VU_adj)
-        source_User_ho_mean = self.gc3_mean(source_User_ho, source_UV_adj)
-        source_User_ho_logstd = self.gc3_logstd(source_User_ho, source_UV_adj)
+        source_User_ho = self.gc1(source_ufea, source_VU_adj) # U*H
+        source_User_ho_mean = self.gc3_mean(source_User_ho, source_UV_adj) #U*F
+        source_User_ho_logstd = self.gc3_logstd(source_User_ho, source_UV_adj) #U*F
 
-        target_User_ho = self.gc2(target_ufea, target_VU_adj)
-        target_User_ho_mean = self.gc4_mean(target_User_ho, target_UV_adj)
-        target_User_ho_logstd = self.gc4_logstd(target_User_ho, target_UV_adj)
+        target_User_ho = self.gc2(target_ufea, target_VU_adj) #U*H
+        target_User_ho_mean = self.gc4_mean(target_User_ho, target_UV_adj) #U*F
+        target_User_ho_logstd = self.gc4_logstd(target_User_ho, target_UV_adj) #U*F
 
         source_User_mean = torch.cat(
-            (source_User_ho_mean, source_ufea), dim=1)
-        source_User_mean = self.source_user_union_mean(source_User_mean)
+            (source_User_ho_mean, source_ufea), dim=1) #U*2F
+        source_User_mean = self.source_user_union_mean(source_User_mean) #U*F
 
         source_User_logstd = torch.cat((source_User_ho_logstd, source_ufea), dim=1)
         source_User_logstd = self.source_user_union_logstd(source_User_logstd)

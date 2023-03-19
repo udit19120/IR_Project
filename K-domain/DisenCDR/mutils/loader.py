@@ -129,14 +129,20 @@ class DataLoader(object):
         # for i in range(len(self.source_ma_set)):
         #     ret = len(self.source_ma_set[i]) / (len(self.source_ma_set[i]) + len(self.target_ma_set[i]))
         # return ret
-        ret = []
-        tot_len = 0
-        for ma_set in self.ma_sets: #ma_set has k elements where ma_sets[j][i] = set of items user i interacted with in domain j.
-            tot_len += len(ma_set)
-
+        ret = np.zeros(self.opt['k'], len(self.ma_sets[0]))
+        tot_len_list = []
         for i in range(len(self.ma_sets[0])):
-            ret = len(self.ma_sets[0][i]) / tot_len
-        return ret  # Wrong
+            total_len = 0
+            for j in range(self.opt['k']):
+                total_len += self.ma_sets[j][i]
+            
+            tot_len_list.append(total_len)
+        
+        for i in range(self.opt['k']):
+            for j in range(len(self.ma_sets[0])):
+                ret[i][j] = len(self.ma_sets[i][j])/tot_len_list[j]
+
+        return ret  
 
     def preprocess_for_predict(self):
         # processed = []

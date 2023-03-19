@@ -133,8 +133,8 @@ class DisenCDR(nn.Module):
             domain_items.append(self.domain_item_embeddings[i](self.domain_item_index[i]))
             domain_user_shares.append(self.domain_user_embedding_share(self.domain_user_index[i]))
             a, b = self.domain_specific_GNNs[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
-            domain_learn_specific_user.append(a)
-            domain_learn_specific_item.append(b)
+            domain_learn_specific_users.append(a)
+            domain_learn_specific_items.append(b)
             # domain_learn_specific_user, domain_learn_specific_item = domain_specific_GNN[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
             a, b = self.domain_share_GNNs[i].forward_user_share(domain_users[i], UVs[i], VUs[i])
             domain_user_means.append(a)
@@ -148,11 +148,10 @@ class DisenCDR(nn.Module):
         mean, sigma, = self.share_GNN(domain_user_shares, UVs, VUs)
 
         user_share, share_kld_loss = self.reparameters(mean, sigma)
-
-        domain_share_klds = []
+        
         self.kld_loss = share_kld_loss
         for i in range(self.opt['k']):
-            domain_share_kld = self._kld_gauss(mean, sigma, domain_user_means[i], domain_specific_sigmas[i])
+            domain_share_kld = self._kld_gauss(mean, sigma, domain_user_means[i], domain_user_sigmas[i])
             self.kld_loss += self.opt['beta']*domain_share_kld
         
         # self.kld_loss = share_kld_loss + self.opt["beta"] * source_share_kld + self.opt[
@@ -163,7 +162,7 @@ class DisenCDR(nn.Module):
         
         domain_learn_users = []
         for i in range(self.opt['k']):
-            domain_learn_users.append(user_share + domain_learn_specific_user[i])
+            domain_learn_users.append(user_share + domain_learn_specific_users[i])
         # source_learn_user = 
         # target_learn_user = user_share + target_learn_specific_user
 
