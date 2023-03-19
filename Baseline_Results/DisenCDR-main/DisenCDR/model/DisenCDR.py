@@ -86,7 +86,7 @@ class DisenCDR(nn.Module):
         return kl
 
     def reparameters(self, mean, logstd):
-        # sigma = 0.1 + 0.9 * F.softplus(torch.exp(logstd))
+        # sigma = 0.1 + 0.9 * F.softplus(s.exp(logstd))
         sigma = torch.exp(0.1 + 0.9 * F.softplus(logstd))
         # gaussian_noise = torch.randn(mean.size(0), self.opt["hidden_dim"]).cuda(mean.device)
         gaussian_noise = torch.randn(mean.size(0), self.opt["hidden_dim"])
