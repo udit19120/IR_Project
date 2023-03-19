@@ -22,7 +22,6 @@ class DisenCDR(nn.Module):
         self.share_GNN = crossVBGE(opt)  # gives q(ZuS|X,Y)
         self.dropout = opt["dropout"]
 
-        # self.user_embedding = nn.Embedding(opt["source_user_num"], opt["feature_dim"])
         print('making embeddings')
 
         self.domain_user_embeddings = []
@@ -41,8 +40,8 @@ class DisenCDR(nn.Module):
        self.item_indices = []
        
        for i in range(opt['k']):
-           self.user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
-           self.item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
+           self.domain_user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
+           self.domain_item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
            
         if self.opt["cuda"]:    #not changed cuz we're poor and we ain't having cuda
             self.user_index = self.user_index.cuda()
@@ -121,14 +120,17 @@ class DisenCDR(nn.Module):
         domain_users = []
         domain_items = []
         domain_user_shares = []
-        domain_learn_specific
+        domain_learn_specific_users = []
+        domain_learn_specific_items = []
         for i in range(opt['k']):
             
-            domain_users.append(self.user_embeddings[i](self.user_index[i]))
-            domain_items.append(self.item_embeddings[i](self.item_index[i]))
-            domain_user_shares.append(self.user_embedding_share(self.user_index[i]))
-            
-            domain_learn_specific_user, domain_learn_specific_item = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
+            domain_users.append(self.domain_user_embeddings[i](self.domain_user_index[i]))
+            domain_items.append(self.domain_item_embeddings[i](self.domain_item_index[i]))
+            domain_user_shares.append(self.domain_user_embedding_share(self.domain_user_index[i]))
+            a, b = self.source_specific_GNN(source_user, source_item, source_UV, source_VU)
+            domain_learn_specific_user.append(a)
+            domain_learn_specific_item.append(b)
+            domain_learn_specific_user, domain_learn_specific_item = 
 
         source_user_mean, source_user_sigma = self.source_share_GNN.forward_user_share(
             source_user, source_UV, source_VU)
