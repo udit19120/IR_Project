@@ -31,6 +31,7 @@ class crossVBGE(nn.Module):
             for i in range(len(UFEAs)):
                 UFEAs[i] = F.dropout(UFEAs[i], self.dropout,
                                      training=self.training)
+                # print(UFEAs[i].shape)
             UFEAs = layer(UFEAs, UVs, VUs)
 
         mean, sigma, = self.encoder[-1](UFEAs, UVs, VUs)
@@ -69,7 +70,8 @@ class DGCNLayer(nn.Module):
             self.user_union.append(
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
-        self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
+        # self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
+        self.source_rate = torch.tensor([1]).view(-1)
         print("hewwo", self.source_rate.shape)
         if self.opt["cuda"]:
             self.source_rate = self.source_rate.cuda()
@@ -78,13 +80,13 @@ class DGCNLayer(nn.Module):
 
         user_hos = [0 for i in range(self.opt['k'])]
         for i in range(self.opt['k']):
-            user_hos[i] = self.gcs_first(UFEAs[i], VUs[i])
-            user_hos[i] = self.gcs_second(user_hos[i], UVs[i])
+            user_hos[i] = self.gcs_first[i](UFEAs[i], VUs[i])
+            user_hos[i] = self.gcs_second[i](user_hos[i], UVs[i])
 
         user_out = [0 for i in range(self.opt['k'])]
         for i in range(self.opt['k']):
             user_out[i] = torch.cat((user_hos[i], UFEAs[i]), dim=1)
-            user_out[i] = self.user_union[i]
+            user_out[i] = self.user_union[i](user_out[i])
          
         val = 0
         for i in range(len(user_out)):
@@ -156,7 +158,8 @@ class LastLayer(nn.Module):
             self.user_union_logstd.append(
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
-        self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
+        # self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
+        self.source_rate = torch.tensor([1]).view(-1)
 
         if self.opt["cuda"]:
             self.source_rate = self.source_rate.cuda()
@@ -190,10 +193,11 @@ class LastLayer(nn.Module):
         user_hos_logstd = [0 for i in range(self.opt['k'])]
     
         for i in range(self.opt['k']):
-            user_hos_mean[i] = self.gcs_first(UFEAs[i], VUs[i])
-            user_hos_mean[i] = self.gcs_second_mean(user_hos_mean[i], UVs[i])
+            print(UFEAs[i].shape)
+            user_hos_mean[i] = self.gcs_first[i](UFEAs[i], VUs[i])
+            user_hos_mean[i] = self.gcs_second_mean[i](user_hos_mean[i], UVs[i])
         
-            user_hos_logstd[i] = self.gcs_second_logstd(user_hos_logstd[i], UVs[i])
+            user_hos_logstd[i] = self.gcs_second_logstd[i](user_hos_logstd[i], UVs[i])
     
         user_means = [0 for i in range(self.opt['k'])]
         user_logstds = [0 for i in range(self.opt['k'])]
@@ -208,8 +212,6 @@ class LastLayer(nn.Module):
         val_mean = 0
         val_logstd = 0
         
- 
-    
         for i in range(len(user_means)):
             for j in range(i+1, len(user_means)):
                 val_mean += self.source_rate * user_means[i] + (1 - self.source_rate) * user_means[j]

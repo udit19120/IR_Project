@@ -26,10 +26,12 @@ class DisenCDR(nn.Module):
 
         self.domain_user_embeddings = []
         self.domain_item_embeddings = []
+        self.domain_user_embeddings_share = []
         
         for i in range(opt['k']):
             self.domain_user_embeddings.append(nn.Embedding(opt[f"fname{i}_user_num"], opt["feature_dim"]))
             self.domain_item_embeddings.append(nn.Embedding(opt[f"fname{i}_item_num"], opt["feature_dim"]))
+            self.domain_user_embeddings_share.append(nn.Embedding(opt[f"fname{i}_user_num"], opt["feature_dim"]))
         
         self.share_mean = nn.Linear(
             opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"])
@@ -42,15 +44,15 @@ class DisenCDR(nn.Module):
         self.domain_item_indices = []
         
         for i in range(opt['k']):
-            self.domain_user_indices.append(torch.arange(0, self.opt[f"fname{i}_user_num"], 1))
-            self.domain_item_indices.append(torch.arange(0, self.opt[f"fname{i}_item_num"], 1))
+            u_index = torch.arange(0, self.opt[f"fname{i}_user_num"], 1)
+            i_index = torch.arange(0, self.opt[f"fname{i}_item_num"], 1)
             
             if self.opt["cuda"]:    #not changed cuz we're poor and we ain't having cuda
-                self.user_index = self.user_index.cuda()
-                self.source_user_index = self.source_user_index.cuda()
-                self.target_user_index = self.target_user_index.cuda()
-                self.source_item_index = self.source_item_index.cuda()
-                self.target_item_index = self.target_item_index.cuda()
+                u_index = u_index.cuda()
+                i_index = i_index.cuda()
+                
+            self.domain_user_indices.append(u_index)
+            self.domain_item_indices.append(i_index)
 
     # the below 2 methods deserve to be deleted as the third one is more generalized
 
@@ -129,9 +131,10 @@ class DisenCDR(nn.Module):
         
         for i in range(self.opt['k']):
             
-            domain_users.append(self.domain_user_embeddings[i](self.domain_user_index[i]))
-            domain_items.append(self.domain_item_embeddings[i](self.domain_item_index[i]))
-            domain_user_shares.append(self.domain_user_embedding_share(self.domain_user_index[i]))
+            domain_users.append(self.domain_user_embeddings[i](self.domain_user_indices[i]))
+            domain_items.append(self.domain_item_embeddings[i](self.domain_item_indices[i]))
+            domain_user_shares.append(self.domain_user_embeddings_share[i](self.domain_user_indices[i]))
+            # print(domain_user_shares[i].shape)
             a, b = self.domain_specific_GNNs[i](domain_users[i], domain_items[i], UVs[i], VUs[i])
             domain_learn_specific_users.append(a)
             domain_learn_specific_items.append(b)

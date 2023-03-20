@@ -146,6 +146,14 @@ class CrossTrainer(Trainer):
             loss += self.criterion(scores[i], labels[i])
         
         return loss
+    
+    def calculate_KLD_loss(self):
+        
+        loss = 0
+        for i in range(self.opt['k']):
+            loss += self.model.domain_specific_GNNs[i].encoder[-1].kld_loss
+        
+        return loss
             
 
     def reconstruct_graph(self, batch, UV, VU, adj = None, epoch = 100):
@@ -167,8 +175,8 @@ class CrossTrainer(Trainer):
         K_item_neg_features = []
         for i in range(self.opt['k']):
             user_feature = self.my_index_select(self.user[i], user)
-            item_pos_feature = self.my_index_select(self.user[i], pos_item[i])
-            item_neg_feature = self.my_index_select(self.user[i], neg_item[i])
+            item_pos_feature = self.my_index_select(self.item[i], pos_item[i])
+            item_neg_feature = self.my_index_select(self.item[i], neg_item[i])
             
             K_user_features.append(user_feature)
             K_item_pos_features.append(item_pos_feature)
@@ -196,9 +204,7 @@ class CrossTrainer(Trainer):
         self.ELBO_loss = self.calculate_elbo_loss(pos_scores, pos_labels) + self.calculate_elbo_loss(neg_scores, neg_labels)
         self.K_KLD_loss = self.calculate_KLD_loss() # change according to Jahnvi's code
         
-        loss = self.ELBO_loss + \
-               self.model.source_specific_GNN.encoder[-1].kld_loss + \
-               self.model.target_specific_GNN.encoder[-1].kld_loss + self.model.kld_loss
+        loss = self.ELBO_loss + self.K_KLD_loss + self.model.kld_loss
 
         loss.backward()
         self.optimizer.step()

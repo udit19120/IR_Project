@@ -47,7 +47,8 @@ parser.add_argument('--decay_epoch', type=int, default=10,
                     help='Decay learning rate after this epoch.')
 parser.add_argument('--leakey', type=float, default=0.1)
 parser.add_argument('--cpu', action='store_true', help='Ignore CUDA.')
-parser.add_argument('--cuda', type=bool, default=torch.cuda.is_available())
+# parser.add_argument('--cuda', type=bool, default=torch.cuda.is_available())
+parser.add_argument('--cuda', type=bool, default=False)
 parser.add_argument('--beta', type=float, default=0.9)
 # train part
 parser.add_argument('--num_epoch', type=int, default=50,

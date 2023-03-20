@@ -1,5 +1,5 @@
 {
-  "k": 2,
+  "k": 3,
   "model": "DisenCDR",
   "feature_dim": 128,
   "hidden_dim": 128,

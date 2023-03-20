@@ -129,12 +129,14 @@ class DataLoader(object):
         # for i in range(len(self.source_ma_set)):
         #     ret = len(self.source_ma_set[i]) / (len(self.source_ma_set[i]) + len(self.target_ma_set[i]))
         # return ret
-        ret = np.zeros(self.opt['k'], len(self.ma_sets[0]))
+        ret = np.zeros((self.opt['k'], len(self.ma_sets[0])))
+        # print(ret.shape)
         tot_len_list = []
         for i in range(len(self.ma_sets[0])):
             total_len = 0
             for j in range(self.opt['k']):
-                total_len += self.ma_sets[j][i]
+                # print(total_len, self.ma_sets[j][i])
+                total_len += len(self.ma_sets[j][i])
             
             tot_len_list.append(total_len)
         
