@@ -129,7 +129,7 @@ class DataLoader(object):
         # for i in range(len(self.source_ma_set)):
         #     ret = len(self.source_ma_set[i]) / (len(self.source_ma_set[i]) + len(self.target_ma_set[i]))
         # return ret
-        ret = np.zeros((self.opt['k'], len(self.ma_sets[0])))
+        ret = []
         # print(ret.shape)
         tot_len_list = []
         for i in range(len(self.ma_sets[0])):
@@ -141,23 +141,20 @@ class DataLoader(object):
             tot_len_list.append(total_len)
         
         for i in range(self.opt['k']):
+            v = np.zeros((len(self.ma_sets[0]),1))
             for j in range(len(self.ma_sets[0])):
-                ret[i][j] = len(self.ma_sets[i][j])/tot_len_list[j]
+                v[j] = len(self.ma_sets[i][j])/tot_len_list[j]
+            ret.append(v)
 
         return ret  
 
     def preprocess_for_predict(self):
-        # processed = []
-        # if self.eval == 1:
-        #     for d in self.source_test_data:
-        #         # user, item_list(pos in the first node)
-        #         processed.append([d[0], d[1]])
-        # else:
-        #     for d in self.target_test_data:
-        #         # user, item_list(pos in the first node)
-        #         processed.append([d[0], d[1]])
-        # return processed
-        return [1,2]
+        processed = []
+        for d in self.test_datas[self.eval]:
+            # user, item_list(pos in the first node)
+            processed.append([d[0], d[1]])
+        return processed
+        # return [1,2]
         # pass
 
     def preprocess(self):

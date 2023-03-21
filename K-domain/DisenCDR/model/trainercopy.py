@@ -95,11 +95,11 @@ class CrossTrainer(Trainer):
             gamma = gamma.cuda()
         return F.relu(gamma - pos + neg).mean()
 
-    def source_predict(self, batch):
+    def source_predict(self, batch, i):
         user_index, item_index = self.unpack_batch_predict(batch)
 
-        user_feature = self.my_index_select(self.source_user, user_index)
-        item_feature = self.my_index_select(self.source_item, item_index)
+        user_feature = self.my_index_select(self.user[i], user_index)
+        item_feature = self.my_index_select(self.item[i], item_index)
 
         user_feature = user_feature.view(user_feature.size()[0], 1, -1)
         user_feature = user_feature.repeat(1, item_feature.size()[1], 1)

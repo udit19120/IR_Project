@@ -207,7 +207,7 @@ for epoch in range(1, opt['num_epoch'] + 1):
         HT = 0.0
         valid_entity = 0.0
         for j, batch in enumerate(dev_batches[i]):
-            predictions = trainer.source_predict(batch)
+            predictions = trainer.source_predict(batch, i)
             for pred in predictions:
                 rank = (-pred).argsort().argsort()[0].item()
 

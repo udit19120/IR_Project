@@ -71,8 +71,10 @@ class DGCNLayer(nn.Module):
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
         # self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
-        self.source_rate = torch.tensor([1]).view(-1)
-        print("hewwo", self.source_rate.shape)
+        # self.source_rate = torch.tensor([1]).view(-1)
+        self.source_rate = [torch.tensor(self.opt['rate'][i]) for i in range(self.opt['k'])]
+        
+        # print("hewwo", self.source_rate.shape)
         if self.opt["cuda"]:
             self.source_rate = self.source_rate.cuda()
 
@@ -89,11 +91,14 @@ class DGCNLayer(nn.Module):
             user_out[i] = self.user_union[i](user_out[i])
          
         val = 0
-        for i in range(len(user_out)):
-            for j in range(i+1, len(user_out)):
-                val += self.source_rate * F.relu(user_out[i]) + (1-self.source_rate) * F.relu(user_out[j])
-       
-        return val
+        print(user_out[0].size())
+        final_user_out = [0 for i in range(self.opt['k'])]
+        for i in range(self.opt['k']):
+            final_user_out[i] = torch.zeros(user_out[i].size())
+            for j in range(self.opt['k']):
+                final_user_out[i] += user_out[j]*self.source_rate[j]
+        print()
+        return final_user_out
 
 class LastLayer(nn.Module):
     """
@@ -159,7 +164,8 @@ class LastLayer(nn.Module):
                 nn.Linear(opt["feature_dim"] + opt["feature_dim"], opt["feature_dim"]))
 
         # self.source_rate = torch.tensor(self.opt["rate"]).view(-1)
-        self.source_rate = torch.tensor([1]).view(-1)
+        # self.source_rate = torch.tensor([1]).view(-1)
+        self.source_rate = [torch.tensor(self.opt['rate'][i]) for i in range(self.opt['k'])]
 
         if self.opt["cuda"]:
             self.source_rate = self.source_rate.cuda()
@@ -194,10 +200,10 @@ class LastLayer(nn.Module):
     
         for i in range(self.opt['k']):
             print(UFEAs[i].shape)
-            user_hos_mean[i] = self.gcs_first[i](UFEAs[i], VUs[i])
-            user_hos_mean[i] = self.gcs_second_mean[i](user_hos_mean[i], UVs[i])
+            user_hos_mean_temp = self.gcs_first[i](UFEAs[i], VUs[i])
+            user_hos_mean[i] = self.gcs_second_mean[i](user_hos_mean_temp, UVs[i])
         
-            user_hos_logstd[i] = self.gcs_second_logstd[i](user_hos_logstd[i], UVs[i])
+            user_hos_logstd[i] = self.gcs_second_logstd[i](user_hos_mean_temp, UVs[i])
     
         user_means = [0 for i in range(self.opt['k'])]
         user_logstds = [0 for i in range(self.opt['k'])]
@@ -213,8 +219,7 @@ class LastLayer(nn.Module):
         val_logstd = 0
         
         for i in range(len(user_means)):
-            for j in range(i+1, len(user_means)):
-                val_mean += self.source_rate * user_means[i] + (1 - self.source_rate) * user_means[j]
-                val_logstd += self.source_rate * user_logstds[i] + (1 - self.source_rate) * user_logstds[j]
+            val_mean += self.source_rate[i] * user_means[i]
+            val_logstd += self.source_rate[i] * user_logstds[i]
 
         return val_mean, val_logstd
