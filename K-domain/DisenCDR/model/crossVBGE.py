@@ -91,13 +91,13 @@ class DGCNLayer(nn.Module):
             user_out[i] = self.user_union[i](user_out[i])
          
         val = 0
-        print(user_out[0].size())
+        # print(user_out[0].size())
         final_user_out = [0 for i in range(self.opt['k'])]
         for i in range(self.opt['k']):
             final_user_out[i] = torch.zeros(user_out[i].size())
             for j in range(self.opt['k']):
                 final_user_out[i] += user_out[j]*self.source_rate[j]
-        print()
+        # print()
         return final_user_out
 
 class LastLayer(nn.Module):
