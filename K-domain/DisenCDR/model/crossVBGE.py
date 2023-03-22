@@ -199,7 +199,7 @@ class LastLayer(nn.Module):
         user_hos_logstd = [0 for i in range(self.opt['k'])]
     
         for i in range(self.opt['k']):
-            print(UFEAs[i].shape)
+            # print(UFEAs[i].shape)
             user_hos_mean_temp = self.gcs_first[i](UFEAs[i], VUs[i])
             user_hos_mean[i] = self.gcs_second_mean[i](user_hos_mean_temp, UVs[i])
         
