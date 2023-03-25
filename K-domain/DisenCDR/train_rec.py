@@ -98,11 +98,12 @@ if "DisenCDR" in opt["model"]:
     UV = []
     VU = []
     adj = []
-    fnames = ['sport', 'cloth', 'phone']
+    fnames = ['cell_phones', 'digital', 'movies']
+    fnames = ['movies_digital_music', 'digital_music_movies']
 
     for i in range(opt['k']):
         filename = fnames[i]
-        source_graph = "../dummy-dataset/" + filename + "/train.txt"
+        source_graph = "../Code/" + filename + "/train_sentiment.txt"
         g = GraphMaker(opt, source_graph)
         G += [g]
         UV += [g.UV]

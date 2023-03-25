@@ -25,11 +25,11 @@ class DataLoader(object):
         self.test_datas = []
         self.users = []
         self.items = []
-        
+
         for i in range(opt['k']):
 
-            train_data = "../dummy-dataset/" + fnames[i] + "/train.txt"
-            test_data = "../dummy-dataset/" + fnames[i] + "/test.txt"
+            train_data = "../Code/" + fnames[i] + "/train_sentiment.txt"
+            test_data = "../Code/" + fnames[i] + "/test_sentiment.txt"
 
             a, b, c, d, e, f = self.read_data(train_data, test_data)
 
@@ -137,16 +137,16 @@ class DataLoader(object):
             for j in range(self.opt['k']):
                 # print(total_len, self.ma_sets[j][i])
                 total_len += len(self.ma_sets[j][i])
-            
+
             tot_len_list.append(total_len)
-        
+
         for i in range(self.opt['k']):
-            v = np.zeros((len(self.ma_sets[0]),1))
+            v = np.zeros((len(self.ma_sets[0]), 1))
             for j in range(len(self.ma_sets[0])):
                 v[j] = len(self.ma_sets[i][j])/tot_len_list[j]
             ret.append(v)
 
-        return ret  
+        return ret
 
     def preprocess_for_predict(self):
         processed = []
@@ -226,8 +226,10 @@ class DataLoader(object):
                     if(b[0] == i):
                         pos_tmps[i].append(b[2])
                     else:
-                        pos_tmps[i].append(self.find_pos(self.ma_lists[i], b[1]))
-                    neg_tmps[i].append(self.find_neg(self.ma_sets[i], b[1], f"fname{i}_item_num"))
+                        pos_tmps[i].append(
+                            self.find_pos(self.ma_lists[i], b[1]))
+                    neg_tmps[i].append(self.find_neg(
+                        self.ma_sets[i], b[1], f"fname{i}_item_num"))
                 user.append(b[1])
             # return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
             return (torch.LongTensor(user), [torch.LongTensor(pos_temp) for pos_temp in pos_tmps], [torch.LongTensor(neg_temp) for neg_temp in neg_tmps])
