@@ -1,0 +1,8 @@
+************source data info************
+n_users=3325, n_items=39463
+n_interactions=118879
+n_train=115554, n_test=3325, sparsity=0.00091
+************target data info************
+n_users=3325, n_items=18462
+n_interactions=53732
+n_train=50407, n_test=3325, sparsity=0.00088

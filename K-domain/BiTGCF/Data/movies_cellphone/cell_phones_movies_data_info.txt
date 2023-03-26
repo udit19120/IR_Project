@@ -1,0 +1,8 @@
+raw_data1 info : 157155 25661 974706
+raw_data2 info : 297446 40166 3150167
+common user num 12512
+after common_data1 info : 9485 19555 77683 0.000419
+after common_data2 info : 9485 26352 144887 0.000580
+min user group size is 5 5
+filter way: user>5,item>10
+write data finished!

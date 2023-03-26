@@ -1,0 +1,44 @@
+************source data info************
+n_users=2607, n_items=4526
+n_interactions=28540
+n_train=25933, n_test=2607, sparsity=0.00242
+************target data info************
+n_users=2607, n_items=21563
+n_interactions=75490
+n_train=72883, n_test=2607, sparsity=0.00134
+without pretraining.
+
+*********source initial result**********
+pretrained model hit=['0.1304'],ndcg=['0.0595']
+
+*********target initial result**********
+pretrained model hit=['0.1128'],ndcg=['0.0529']
+target domain single train
+
+*************source result**************
+Epoch 0 [377.6s + 13.8s]: train==[0.9493=0.4786 + 0.5053], hit=['0.3433'], ndcg=['0.1730'] at full rating, #user=2607
+
+*************target result**************
+Epoch 0 [377.6s + 14.7s]: train==[0.9493=0.4786 + 0.5053], hit=['0.3142'], ndcg=['0.1624'] at full rating, #user=2607
+target domain single train
+
+*************source result**************
+Epoch 1 [369.0s + 15.1s]: train==[0.8677=0.4285 + 0.4441], hit=['0.4162'], ndcg=['0.2274'] at full rating, #user=2607
+
+*************target result**************
+Epoch 1 [369.0s + 16.8s]: train==[0.8677=0.4285 + 0.4441], hit=['0.3916'], ndcg=['0.2117'] at full rating, #user=2607
+target domain single train
+
+*************source result**************
+Epoch 2 [363.1s + 13.5s]: train==[0.8418=0.4149 + 0.4276], hit=['0.4553'], ndcg=['0.2538'] at full rating, #user=2607
+
+*************target result**************
+Epoch 2 [363.1s + 15.7s]: train==[0.8418=0.4149 + 0.4276], hit=['0.4200'], ndcg=['0.2343'] at full rating, #user=2607
+target domain single train
+
+*************source result**************
+Epoch 3 [348.4s + 11.7s]: train==[0.8284=0.4073 + 0.4194], hit=['0.4783'], ndcg=['0.2746'] at full rating, #user=2607
+
+*************target result**************
+Epoch 3 [348.4s + 13.2s]: train==[0.8284=0.4073 + 0.4194], hit=['0.4469'], ndcg=['0.2534'] at full rating, #user=2607
+target domain single train
