@@ -194,6 +194,7 @@ for epoch in range(1, opt['num_epoch'] + 1):
         for pred in predictions:
             DCG = 0
             IDCG = 0
+            valid_entity += 1
             
             # print(sentiment_scores[scores_index])
             sents = sentiment_scores[scores_index].tolist()
@@ -225,9 +226,9 @@ for epoch in range(1, opt['num_epoch'] + 1):
             scores_index+=1
             
             
-    s_ndcg = NDCG / len(source_dev_batch)
+    s_ndcg = NDCG / valid_entity
     print("Source Domain NDCG: ", s_ndcg)
-    s_hit = HT / len(source_dev_batch)
+    s_hit = HT / valid_entity
     print("Source domain HITS: ", s_hit)
     # exit()
 
@@ -243,7 +244,7 @@ for epoch in range(1, opt['num_epoch'] + 1):
         for pred in predictions:
             DCG = 0
             IDCG = 0
-            
+            valid_entity += 1
             # print(sentiment_scores[scores_index])
             sents = sentiment_scores[scores_index].tolist()
             rankings_list = (-pred).argsort()
@@ -272,8 +273,8 @@ for epoch in range(1, opt['num_epoch'] + 1):
 
             scores_index+=1
             
-    t_ndcg = NDCG / len(target_dev_batch)
-    t_hit = HT / len(target_adj)
+    t_ndcg = NDCG / valid_entity
+    t_hit = HT / valid_entity
     print("Target Domain NDCG: ", t_ndcg)
     print("Target domain HITS: ", t_hit)
 
