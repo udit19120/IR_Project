@@ -117,10 +117,12 @@ train_batch = DataLoader(opt['dataset'], opt['batch_size'], opt, evaluation = -1
 # exit()
 source_dev_batch = DataLoader(opt['dataset'], opt["batch_size"], opt, evaluation = 1)
 # for i, batch in enumerate(source_dev_batch):
+#     print("HERE")
 #     print(i, batch)
-#     print(batch[0])
-#     break
-# exit()
+#     print(batch[i])
+#     exit()
+# #     break
+
 target_dev_batch = DataLoader(opt['dataset'], opt["batch_size"], opt, evaluation = 2)
 
 print("user_num", opt["source_user_num"])
@@ -186,8 +188,10 @@ for epoch in range(1, opt['num_epoch'] + 1):
     rel_docs = 10 # number of releveant docs
     print("Source Dev Batches: ", len(source_dev_batch))
     for i, batch in enumerate(source_dev_batch):
+        # print(i, batch)
         
         predictions, sentiment_scores = trainer.source_predict(batch)
+        # print(sentiment_scores)
         # print(predictions, sentiment_scores)
         # exit()
         scores_index = 0
@@ -198,8 +202,10 @@ for epoch in range(1, opt['num_epoch'] + 1):
             
             # print(sentiment_scores[scores_index])
             sents = sentiment_scores[scores_index].tolist()
+            # print("Sents", sents)
             rankings_list = (-pred).argsort()
             rank = (-pred).argsort().argsort()[0].item()
+            # print("rank", rank)
             if(rank < rel_docs):
                 HT+=1
                 for j in range(len(rankings_list)):
@@ -207,9 +213,11 @@ for epoch in range(1, opt['num_epoch'] + 1):
                     if(j == rel_docs):
                         break
                     
+
                     sent_score = sents[rankings_list[j]]
-                    
-                    DCG += sent_score / np.log2(rankings_list[j]+2)
+                    # print(sent_score)  
+                    # print("Ranking list", (rankings_list[j],sent_score))                
+                    DCG += sent_score / np.log2(j+2)
             # print("DCG: ", DCG)
             
             sents_sorted = sorted(sents, reverse=True)
@@ -248,17 +256,21 @@ for epoch in range(1, opt['num_epoch'] + 1):
             # print(sentiment_scores[scores_index])
             sents = sentiment_scores[scores_index].tolist()
             rankings_list = (-pred).argsort()
+            # print(rankings_list)
             rank = (-pred).argsort().argsort()[0].item()
             if(rank < rel_docs):
                 HT+=1
+                # print("Hit", HT)
                 for j in range(len(rankings_list)):
                     
                     if(j == rel_docs):
                         break
                     
                     sent_score = sents[rankings_list[j]]
-                    
-                    DCG += sent_score / np.log2(rankings_list[j]+2)
+                    # print("Sent Score", sent_score)
+                    # print("Log term", np.log2(rankings_list[j]+2))
+                    DCG += sent_score / np.log2(j+2)
+                    # print("DCG", DCG)
             # print("DCG: ", DCG)
             
             sents_sorted = sorted(sents, reverse=True)

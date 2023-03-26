@@ -134,10 +134,10 @@ class DataLoader(object):
         """ Preprocess the data and convert to ids. """
         processed = []
         for d in self.source_train_data:
-            d = [d[1], d[0]]
-            processed.append(d + [-1])
+            d = [d[1], d[0]] 
+            processed.append(d + [-1]) #this is of the form item, user, -1, weight
         for d in self.target_train_data:
-            processed.append([-1] + d)
+            processed.append([-1] + d) #this is of the form -1,user, item,weight
         return processed
 
     def find_pos(self,ma_list, user):
@@ -169,6 +169,9 @@ class DataLoader(object):
         # print((batch[0]))
         if self.eval!=-1 :
             batch = list(zip(*batch))
+
+
+            # print((torch.LongTensor(batch[0]), torch.LongTensor(batch[1]), torch.FloatTensor(batch[2])))
             return (torch.LongTensor(batch[0]), torch.LongTensor(batch[1]), torch.FloatTensor(batch[2]))
 
         else :
@@ -187,6 +190,8 @@ class DataLoader(object):
                 source_neg_tmp.append(self.find_neg(self.source_ma_set, b[1], "source_item_num"))
                 target_neg_tmp.append(self.find_neg(self.target_ma_set, b[1], "target_item_num"))
                 user.append(b[1])
+            # print("ELSE in loader\n\n")
+            # print(torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
             return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
     def __iter__(self):
         for i in range(self.__len__()):
