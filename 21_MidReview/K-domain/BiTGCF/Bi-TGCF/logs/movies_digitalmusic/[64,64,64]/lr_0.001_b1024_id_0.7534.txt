@@ -1,0 +1,51 @@
+************source data info************
+n_users=2607, n_items=21563
+n_interactions=75490
+n_train=72883, n_test=2607, sparsity=0.00134
+************target data info************
+n_users=2607, n_items=4526
+n_interactions=28540
+n_train=25933, n_test=2607, sparsity=0.00242
+without pretraining.
+
+*********source initial result**********
+pretrained model hit=['0.1369'],ndcg=['0.0644']
+
+*********target initial result**********
+pretrained model hit=['0.1320'],ndcg=['0.0634']
+source domain single train
+
+*************source result**************
+Epoch 0 [357.5s + 15.7s]: train==[0.9501=0.5058 + 0.4797], hit=['0.3107'], ndcg=['0.1578'] at full rating, #user=2607
+
+*************target result**************
+Epoch 0 [357.5s + 14.0s]: train==[0.9501=0.5058 + 0.4797], hit=['0.3283'], ndcg=['0.1645'] at full rating, #user=2607
+source domain single train
+
+*************source result**************
+Epoch 1 [389.8s + 19.6s]: train==[0.8670=0.4435 + 0.4282], hit=['0.3928'], ndcg=['0.2116'] at full rating, #user=2607
+
+*************target result**************
+Epoch 1 [389.8s + 16.4s]: train==[0.8670=0.4435 + 0.4282], hit=['0.4308'], ndcg=['0.2289'] at full rating, #user=2607
+source domain single train
+
+*************source result**************
+Epoch 2 [366.2s + 16.4s]: train==[0.8404=0.4270 + 0.4145], hit=['0.4212'], ndcg=['0.2348'] at full rating, #user=2607
+
+*************target result**************
+Epoch 2 [366.2s + 15.4s]: train==[0.8404=0.4270 + 0.4145], hit=['0.4549'], ndcg=['0.2554'] at full rating, #user=2607
+source domain single train
+
+*************source result**************
+Epoch 3 [351.8s + 14.9s]: train==[0.8274=0.4193 + 0.4070], hit=['0.4480'], ndcg=['0.2532'] at full rating, #user=2607
+
+*************target result**************
+Epoch 3 [351.8s + 12.9s]: train==[0.8274=0.4193 + 0.4070], hit=['0.4776'], ndcg=['0.2737'] at full rating, #user=2607
+source domain single train
+
+*************source result**************
+Epoch 4 [670.7s + 31.9s]: train==[0.8177=0.4141 + 0.4021], hit=['0.4588'], ndcg=['0.2648'] at full rating, #user=2607
+
+*************target result**************
+Epoch 4 [670.7s + 28.4s]: train==[0.8177=0.4141 + 0.4021], hit=['0.4918'], ndcg=['0.2859'] at full rating, #user=2607
+source domain single train
