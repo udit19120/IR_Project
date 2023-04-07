@@ -125,6 +125,7 @@ def getNDCG(ranklist, gtItem):
     for i in range(len(ranklist)):
         item = ranklist[i]
         if item == gtItem:
-            return math.log(2) / math.log(i+2)
+            return 1 / np.log2(i + 2)   #changed the formulation to match disencdr
+            # return math.log(2) / math.log(i+2)
     return 0
 
