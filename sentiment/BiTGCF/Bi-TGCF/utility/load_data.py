@@ -17,20 +17,22 @@ import scipy.sparse as sp
 from time import time
 from utility.helper import *
 
+
 class Data(object):
-    def __init__(self, path, batch_size,neg_num):
+    def __init__(self, path, batch_size, neg_num):
         self.neg_num = neg_num
         self.path = path
         self.batch_size = batch_size
-        train_file = path +'/train.txt'
+        train_file = path + '/train.txt'
         test_file = path + '/test.txt'
 
-        #get number of users and items
+        # get number of users and items
         self.n_users, self.n_items = 0, 0
         self.n_train, self.n_test = 0, 0
         self.neg_pools = {}
 
-        self.exist_users = []
+        self.exist_users = set()
+        self.exist_items = set()
 
         with open(train_file, "r") as f:
             line = f.readline().strip('\n')
@@ -39,6 +41,8 @@ class Data(object):
                 u, i = int(arr[0]), int(arr[1])
                 self.n_users = max(self.n_users, u)
                 self.n_items = max(self.n_items, i)
+                self.exist_items.add(i)
+                self.exist_users.add(u)
                 self.n_train += 1
                 line = f.readline().strip('\n')
 
@@ -50,12 +54,13 @@ class Data(object):
         self.R = sp.dok_matrix((self.n_users, self.n_items), dtype=np.float32)
         self.ratingList = []
         self.train_items, self.test_set = {}, {}
-        
+
         with open(train_file) as f_train:
             with open(test_file) as f_test:
-                train_items=set()
+                train_items = set()
                 for l in f_train.readlines():
-                    if len(l) == 0: break
+                    if len(l) == 0:
+                        break
                     l = l.strip('\n').split('\t')
                     user, item, rating = int(l[0]), int(l[1]), float(l[2])
                     train_items.add(item)
@@ -70,7 +75,8 @@ class Data(object):
                 line = f_test.readline().strip('\n')
                 while line != None and line != "":
                     arr = line.split("\t")
-                    user, item, sentiment_score = int(arr[0]), int(arr[1]), float(arr[2])
+                    user, item, sentiment_score = int(
+                        arr[0]), int(arr[1]), float(arr[2])
                     # if(item not in train_items):
                     #     line = f_test.readline().strip('\n')
                     #     continue
@@ -84,6 +90,7 @@ class Data(object):
 
     def get_R_mat(self):
         return self.R
+
     def get_adj_mat(self):
         try:
             t1 = time()
@@ -91,7 +98,6 @@ class Data(object):
             norm_adj_mat = sp.load_npz(self.path + '/s_norm_adj_mat.npz')
             mean_adj_mat = sp.load_npz(self.path + '/s_mean_adj_mat.npz')
             print('already load adj matrix', adj_mat.shape, time() - t1)
-
 
         except Exception:
             adj_mat, norm_adj_mat, mean_adj_mat = self.create_adj_mat()
@@ -102,7 +108,8 @@ class Data(object):
 
     def create_adj_mat(self):
         t1 = time()
-        adj_mat = sp.dok_matrix((self.n_users + self.n_items, self.n_users + self.n_items), dtype=np.float32)
+        adj_mat = sp.dok_matrix(
+            (self.n_users + self.n_items, self.n_users + self.n_items), dtype=np.float32)
         adj_mat = adj_mat.tolil()
         R = self.R.tolil()
 
@@ -130,19 +137,21 @@ class Data(object):
             degree = np.sum(dense_A, axis=1, keepdims=False)
 
             temp = np.dot(np.diag(np.power(degree, -1)), dense_A)
-            print('check normalized adjacency matrix whether equal to this laplacian matrix.')
+            print(
+                'check normalized adjacency matrix whether equal to this laplacian matrix.')
             return temp
 
-        norm_adj_mat = normalized_adj_single(adj_mat + sp.eye(adj_mat.shape[0]))
+        norm_adj_mat = normalized_adj_single(
+            adj_mat + sp.eye(adj_mat.shape[0]))
         mean_adj_mat = normalized_adj_single(adj_mat)
 
         print('already normalize adjacency matrix', time() - t2)
         return adj_mat.tocsr(), norm_adj_mat.tocsr(), mean_adj_mat.tocsr()
 
-    def read_neg_file(self,path):
+    def read_neg_file(self, path):
         try:
             test_neg = path + '/test_neg.txt'
-            test_neg_f = open(test_neg ,'r')
+            test_neg_f = open(test_neg, 'r')
         except:
             negativeList = None
             return negativeList
@@ -157,11 +166,13 @@ class Data(object):
             negativeList.append(negatives)
             line = test_neg_f.readline()
         return negativeList
-    def get_test_neg_item(self,u,negativeList):
+
+    def get_test_neg_item(self, u, negativeList):
         neg_items = negativeList[u]
         return neg_items
+
     def get_train_instance(self):
-        user_input, item_input, labels = [],[],[]
+        user_input, item_input, labels = [], [], []
         for (u, i) in self.R.keys():
             # positive instance
             user_input.append(u)
@@ -175,16 +186,17 @@ class Data(object):
                 user_input.append(u)
                 item_input.append(j)
                 labels.append(0)
-        return np.array(user_input),np.array(item_input),np.array(labels)
+        return np.array(user_input), np.array(item_input), np.array(labels)
 
     def get_num_users_items(self):
         return self.n_users, self.n_items
 
-    def print_statistics(self,save_log):
-        pprint('n_users=%d, n_items=%d' % (self.n_users, self.n_items),save_log)
-        pprint('n_interactions=%d' % (self.n_train + self.n_test),save_log)
-        pprint('n_train=%d, n_test=%d, sparsity=%.5f' % (self.n_train, self.n_test, (self.n_train + self.n_test)/(self.n_users * self.n_items)),save_log)
-
+    def print_statistics(self, save_log):
+        pprint('n_users=%d, n_items=%d' %
+               (self.n_users, self.n_items), save_log)
+        pprint('n_interactions=%d' % (self.n_train + self.n_test), save_log)
+        pprint('n_train=%d, n_test=%d, sparsity=%.5f' % (self.n_train, self.n_test,
+               (self.n_train + self.n_test)/(self.n_users * self.n_items)), save_log)
 
     def get_sparsity_split(self):
         try:
@@ -196,7 +208,8 @@ class Data(object):
                     split_state.append(line.strip())
                     print(line.strip())
                 else:
-                    split_uids.append([int(uid) for uid in line.strip().split('\t')])
+                    split_uids.append([int(uid)
+                                      for uid in line.strip().split('\t')])
             print('get sparsity split.')
 
         except Exception:
@@ -204,12 +217,11 @@ class Data(object):
             f = open(self.path + '/sparsity.split', 'w')
             for idx in range(len(split_state)):
                 f.write(split_state[idx] + '\n')
-                f.write('\t'.join([str(uid) for uid in split_uids[idx]]) + '\n')
+                f.write('\t'.join([str(uid)
+                        for uid in split_uids[idx]]) + '\n')
             print('create sparsity split.')
 
         return split_uids, split_state
-
-
 
     def create_sparsity_split(self):
         all_users_to_test = list(self.test_set.keys())
@@ -244,7 +256,8 @@ class Data(object):
             if n_rates >= count * 0.25 * (self.n_train + self.n_test):
                 split_uids.append(temp)
 
-                state = '#inter per user<=[%d], #users=[%d], #all rates=[%d]' %(n_iids, len(temp), n_rates)
+                state = '#inter per user<=[%d], #users=[%d], #all rates=[%d]' % (
+                    n_iids, len(temp), n_rates)
                 split_state.append(state)
                 print(state)
 
@@ -255,10 +268,9 @@ class Data(object):
             if idx == len(user_n_iid.keys()) - 1 or n_count == 0:
                 split_uids.append(temp)
 
-                state = '#inter per user<=[%d], #users=[%d], #all rates=[%d]' % (n_iids, len(temp), n_rates)
+                state = '#inter per user<=[%d], #users=[%d], #all rates=[%d]' % (
+                    n_iids, len(temp), n_rates)
                 split_state.append(state)
                 print(state)
-
-
 
         return split_uids, split_state
