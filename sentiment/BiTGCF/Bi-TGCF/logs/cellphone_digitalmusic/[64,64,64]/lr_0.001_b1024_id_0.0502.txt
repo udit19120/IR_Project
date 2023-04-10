@@ -1,0 +1,30 @@
+************source data info************
+n_users=713, n_items=4759
+n_interactions=6658
+n_train=5945, n_test=713, sparsity=0.00196
+************target data info************
+n_users=713, n_items=3335
+n_interactions=8202
+n_train=7489, n_test=713, sparsity=0.00345
+without pretraining.
+
+*********source initial result**********
+pretrained model hit=['0.1122'],ndcg=['0.0494']
+
+*********target initial result**********
+pretrained model hit=['0.1374'],ndcg=['0.0666']
+target domain single train
+
+*************source result**************
+Epoch 0 [14.4s + 1.0s]: train==[1.1931=0.5929 + 0.6041], hit=['0.1052'], ndcg=['0.0475'] at full rating, #user=713
+
+*************target result**************
+Epoch 0 [14.4s + 1.0s]: train==[1.1931=0.5929 + 0.6041], hit=['0.1557'], ndcg=['0.0795'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 1 [7.7s + 1.0s]: train==[1.1692=0.5878 + 0.5835], hit=['0.1136'], ndcg=['0.0524'] at full rating, #user=713
+
+*************target result**************
+Epoch 1 [7.7s + 1.0s]: train==[1.1692=0.5878 + 0.5835], hit=['0.1403'], ndcg=['0.0677'] at full rating, #user=713
+target domain single train

@@ -23,6 +23,7 @@ class DataLoader(object):
         source_train_data = f"../dataset/{filename}/" + "train_"+ fileName + ".txt"
         source_test_data = f"../dataset/{filename}/" + "test_"+ fileName + ".txt"
         self.source_ma_set, self.source_ma_list, self.source_train_data, self.source_test_data, self.source_user, self.source_item = self.read_data(source_train_data, source_test_data)
+        print("Shape of source test data: ",len(self.source_test_data))
         opt["source_user_num"] = len(self.source_user)
         opt["source_item_num"] = len(self.source_item)
         # ************* target data *****************
@@ -88,22 +89,29 @@ class DataLoader(object):
                     ma_list[line[0]] = []
                 ma[line[0]].add(line[1])
                 ma_list[line[0]].append(line[1])
+        user_no = 0
+        item_no = 0
         with codecs.open(test_file,"r",encoding="utf-8") as infile:
             test_data=[]
+            print(test_file)
             for line in infile:
                 line=line.strip().split("\t")
                 line[0] = int(line[0])
                 line[1] = int(line[1])
                 if user.get(line[0], "zxczxc") is "zxczxc":
+                    print("Soham pagal: ", line[0])
+                    user_no += 1
                     continue
                 if item.get(line[1], "zxczxc") is "zxczxc":
+                    print("IR fuck off: ", line[1])
+                    item_no += 1
                     continue
                 line[0] = user[line[0]]
                 line[1] = item[line[1]]
 
                 ret = [line[1]] #original item id
                 scores = [float(line[2])]
-                for i in range(999):
+                for i in range(99):
                     while True:
                         rand = random.randint(0, len(item)-1) #random ID
                         if rand in ma[line[0]]: # if random ID is in train data toh us random ID ko ni kroge use
@@ -112,7 +120,9 @@ class DataLoader(object):
                         break
                     scores.append(0)
                 test_data.append([line[0],ret, scores])
-
+        
+        print("No users: ", user_no)
+        print("No items: ", item_no)
         return ma, ma_list, train_data, test_data, user, item
 
     def rate(self):

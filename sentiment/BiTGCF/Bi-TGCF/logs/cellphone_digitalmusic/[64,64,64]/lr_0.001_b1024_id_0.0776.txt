@@ -1,0 +1,11 @@
+************source data info************
+n_users=713, n_items=4759
+n_interactions=6276
+n_train=5945, n_test=331, sparsity=0.00185
+************target data info************
+n_users=713, n_items=3335
+n_interactions=8067
+n_train=7489, n_test=578, sparsity=0.00339
+without pretraining.
+
+*********source initial result**********

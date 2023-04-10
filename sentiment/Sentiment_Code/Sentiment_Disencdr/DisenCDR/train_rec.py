@@ -64,6 +64,7 @@ def seed_everything(seed=1111):
 
 
 args = parser.parse_args()
+args.cuda = False
 print(args.cuda)
 if args.cpu:
     args.cuda = False
@@ -191,6 +192,7 @@ for epoch in range(1, opt['num_epoch'] + 1):
         # print(i, batch)
         
         predictions, sentiment_scores = trainer.source_predict(batch)
+        print("length of batch: ",len(batch[0]))
         # print(sentiment_scores)
         # print(predictions, sentiment_scores)
         # exit()
@@ -233,7 +235,7 @@ for epoch in range(1, opt['num_epoch'] + 1):
                 
             scores_index+=1
             
-            
+    print("Source samples: ", valid_entity)
     s_ndcg = NDCG / valid_entity
     print("Source Domain NDCG: ", s_ndcg)
     s_hit = HT / valid_entity
@@ -284,7 +286,8 @@ for epoch in range(1, opt['num_epoch'] + 1):
                 NDCG += DCG / (IDCG)
 
             scores_index+=1
-            
+    
+    print("Target samples: ", valid_entity)
     t_ndcg = NDCG / valid_entity
     t_hit = HT / valid_entity
     print("Target Domain NDCG: ", t_ndcg)
