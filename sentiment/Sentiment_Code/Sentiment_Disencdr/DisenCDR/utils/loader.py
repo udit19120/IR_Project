@@ -13,6 +13,7 @@ class DataLoader(object):
     Load data from json files, preprocess and prepare batches.
     """
     def __init__(self, filename, batch_size, opt, evaluation):
+        #  change 
         self.batch_size = batch_size
         self.opt = opt
         self.eval = evaluation
@@ -23,14 +24,18 @@ class DataLoader(object):
         source_train_data = f"../dataset/{filename}/" + "train_"+ fileName + ".txt"
         source_test_data = f"../dataset/{filename}/" + "test_"+ fileName + ".txt"
         self.source_ma_set, self.source_ma_list, self.source_train_data, self.source_test_data, self.source_user, self.source_item = self.read_data(source_train_data, source_test_data)
+      
         print("Shape of source test data: ",len(self.source_test_data))
+      
         opt["source_user_num"] = len(self.source_user)
         opt["source_item_num"] = len(self.source_item)
+
         # ************* target data *****************
         filename = filename.split("_")
         filename = filename[1] + "_" + filename[0]
         target_train_data = f"../dataset/{filename}/" + "train_"+ fileName + ".txt"
         target_test_data = f"../dataset/{filename}/" + "test_"+ fileName + ".txt"
+        
         self.target_ma_set, self.target_ma_list, self.target_train_data, self.target_test_data, self.target_user, self.target_item = self.read_data(target_train_data, target_test_data)
         opt["target_user_num"] = len(self.target_user)
         opt["target_item_num"] = len(self.target_item)
@@ -39,8 +44,9 @@ class DataLoader(object):
         
         print(opt["source_user_num"], opt["target_user_num"])
         assert opt["source_user_num"] == opt["target_user_num"]
+       
         # print(self.source_train_data)
-        if evaluation == -1:
+        if evaluation == -1: # training
             data = self.preprocess()
         else :
             data = self.preprocess_for_predict()
@@ -66,7 +72,7 @@ class DataLoader(object):
         data = [data[i:i+batch_size] for i in range(0, len(data), batch_size)]
         self.data = data
         
-    def read_data(self, train_file, test_file):
+    def read_data(self, train_file, test_file):  # possible change
         with codecs.open(train_file, "r", encoding="utf-8") as infile:
             train_data = []
             user = {}
@@ -77,18 +83,24 @@ class DataLoader(object):
                 line=line.strip().split("\t")
                 line[0] = int(line[0])
                 line[1] = int(line[1])
+                scores = float(line[2])
+
                 if user.get(line[0], "zxczxc") is "zxczxc":
                     user[line[0]] = len(user)
                 if item.get(line[1], "zxczxc") is "zxczxc":
                     item[line[1]] = len(item)
                 line[0] = user[line[0]]
                 line[1] = item[line[1]]
-                train_data.append([line[0],line[1]])
+                # line[2] = 
+                # print('scores:', scores)
+                # exit()
+                train_data.append([line[0],line[1],scores])
                 if line[0] not in ma:
                     ma[line[0]] = set()
                     ma_list[line[0]] = []
                 ma[line[0]].add(line[1])
                 ma_list[line[0]].append(line[1])
+
         user_no = 0
         item_no = 0
         with codecs.open(test_file,"r",encoding="utf-8") as infile:
@@ -99,11 +111,11 @@ class DataLoader(object):
                 line[0] = int(line[0])
                 line[1] = int(line[1])
                 if user.get(line[0], "zxczxc") is "zxczxc":
-                    print("Soham pagal: ", line[0])
+                    # print("Soham pagal: ", line[0])
                     user_no += 1
                     continue
                 if item.get(line[1], "zxczxc") is "zxczxc":
-                    print("IR fuck off: ", line[1])
+                    # print("IR fuck off: ", line[1])
                     item_no += 1
                     continue
                 line[0] = user[line[0]]
@@ -140,14 +152,15 @@ class DataLoader(object):
             for d in self.target_test_data:
                 processed.append([d[0],d[1],d[2]]) # user, item_list(pos in the first node)
         return processed
+    
     def preprocess(self):
         """ Preprocess the data and convert to ids. """
         processed = []
         for d in self.source_train_data:
-            d = [d[1], d[0]] 
-            processed.append(d + [-1]) #this is of the form item, user, -1, weight
+            d_ = [d[1], d[0]] 
+            processed.append(d_ + [-1] + [d[2]]) #this is of the form item, user, -1, weight
         for d in self.target_train_data:
-            processed.append([-1] + d) #this is of the form -1,user, item,weight
+            processed.append([-1] + d + [d[2]]) #this is of the form -1,user, item,weight
         return processed
 
     def find_pos(self,ma_list, user):
@@ -190,7 +203,9 @@ class DataLoader(object):
             source_pos_tmp = []
             target_pos_tmp = []
             user = []
+            sent = []
             for b in batch:
+
                 if b[0] == -1:
                     source_pos_tmp.append(self.find_pos(self.source_ma_list, b[1]))
                     target_pos_tmp.append(b[2])
@@ -200,9 +215,10 @@ class DataLoader(object):
                 source_neg_tmp.append(self.find_neg(self.source_ma_set, b[1], "source_item_num"))
                 target_neg_tmp.append(self.find_neg(self.target_ma_set, b[1], "target_item_num"))
                 user.append(b[1])
+                sent.append(b[3])
             # print("ELSE in loader\n\n")
             # print(torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
-            return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
+            return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp), torch.FloatTensor(sent))
     def __iter__(self):
         for i in range(self.__len__()):
             yield self.__getitem__(i)

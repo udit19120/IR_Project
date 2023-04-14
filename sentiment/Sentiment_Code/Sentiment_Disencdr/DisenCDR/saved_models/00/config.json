@@ -14,7 +14,7 @@
   "cpu": false,
   "cuda": false,
   "beta": 0.9,
-  "num_epoch": 50,
+  "num_epoch": 15,
   "batch_size": 1024,
   "log_step": 200,
   "log": "logs.txt",
@@ -24,8 +24,8 @@
   "seed": 2040,
   "load": false,
   "model_file": null,
-  "sentiment": "sentiment_one",
+  "sentiment": "sentiment_rating_scaled",
   "number_user": 713,
-  "number_item": 3207,
+  "number_item": 4369,
   "model_save_dir": "./saved_models/00"
 }

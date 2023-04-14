@@ -78,9 +78,10 @@ class GraphMaker(object):
 
             all_edges.append([edge[0],edge[1] + opt["number_user"]])
             all_edges.append([edge[1] + opt["number_user"], edge[0]])
+           
             if edge[0] not in real_adj :
                 real_adj[edge[0]] = {}
-            real_adj[edge[0]][edge[1]] = 1
+            real_adj[edge[0]][edge[1]] = 1  
 
         UV_edges = np.array(UV_edges)
         VU_edges = np.array(VU_edges)
@@ -91,7 +92,11 @@ class GraphMaker(object):
         VU_adj = sp.coo_matrix((np.ones(VU_edges.shape[0]), (VU_edges[:, 0], VU_edges[:, 1])),
                                shape=(opt["number_item"], opt["number_user"]),
                                dtype=np.float32)
-        all_adj = sp.coo_matrix((np.ones(all_edges.shape[0]), (all_edges[:, 0], all_edges[:, 1])),shape=(opt["number_item"]+opt["number_user"], opt["number_item"]+opt["number_user"]),dtype=np.float32)
+        all_adj = sp.coo_matrix((np.ones(all_edges.shape[0]), (all_edges[:, 0], all_edges[:, 1])),
+                                shape=(opt["number_item"]+opt["number_user"],
+                                opt["number_item"]+opt["number_user"]),
+                                dtype=np.float32)
+        
         UV_adj = normalize(UV_adj)
         VU_adj = normalize(VU_adj)
         all_adj = normalize(all_adj)
