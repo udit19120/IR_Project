@@ -14,7 +14,7 @@
   "cpu": false,
   "cuda": false,
   "beta": 0.9,
-  "num_epoch": 15,
+  "num_epoch": 50,
   "batch_size": 1024,
   "log_step": 200,
   "log": "logs.txt",

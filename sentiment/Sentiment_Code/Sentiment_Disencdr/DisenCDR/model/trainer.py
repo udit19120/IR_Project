@@ -164,14 +164,20 @@ class CrossTrainer(Trainer):
         neg_target_score = self.model.target_predict_dot(target_user_feature, target_item_neg_feature)
 
         # to change
-        pos_labels, neg_labels = torch.ones(pos_source_score.size()), torch.zeros(
-            pos_source_score.size())
+        # pos_labels, neg_labels = torch.ones(pos_source_score.size()), torch.zeros(
+        #     pos_source_score.size())
         
+        # val = 0         # for zero
+        val = 0.5       # for 0.5
+        # val = torch.mean(sent_scores)  #for mean score
+        
+        neg_labels = val * torch.ones(pos_source_score.size())
+        
+        pos_labels = sent_scores
         if pos_labels.size() != pos_source_score.size():
             print(".........bruhhhh.......")
             exit()
-
-        pos_labels = sent_scores
+        
 
         if self.opt["cuda"]:
             pos_labels = pos_labels.cuda()
