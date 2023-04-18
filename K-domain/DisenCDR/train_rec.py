@@ -99,7 +99,7 @@ if "DisenCDR" in opt["model"]:
     VU = []
     adj = []
     fnames = ['cell_phones', 'digital', 'movies']
-    fnames = ['movies_digital_music', 'digital_music_movies']
+    # fnames = ['movies_digital_music', 'digital_music_movies']
 
     for i in range(opt['k']):
         filename = fnames[i]
