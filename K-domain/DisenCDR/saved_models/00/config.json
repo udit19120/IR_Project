@@ -1,5 +1,5 @@
 {
-  "k": 2,
+  "k": 3,
   "model": "DisenCDR",
   "feature_dim": 128,
   "hidden_dim": 128,
@@ -25,6 +25,6 @@
   "load": false,
   "model_file": null,
   "number_user": 335,
-  "number_item": 2356,
+  "number_item": 5868,
   "model_save_dir": "./saved_models/00"
 }
