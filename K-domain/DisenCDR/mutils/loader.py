@@ -113,7 +113,7 @@ class DataLoader(object):
                 line[1] = item[line[1]]
 
                 ret = [line[1]]
-                for i in range(999):
+                for i in range(99):
                     while True:
                         rand = random.randint(0, len(item)-1)
                         if rand in ma[line[0]]:

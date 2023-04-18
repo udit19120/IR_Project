@@ -24,7 +24,7 @@
   "seed": 2040,
   "load": false,
   "model_file": null,
-  "number_user": 2607,
-  "number_item": 4493,
+  "number_user": 335,
+  "number_item": 2356,
   "model_save_dir": "./saved_models/00"
 }
