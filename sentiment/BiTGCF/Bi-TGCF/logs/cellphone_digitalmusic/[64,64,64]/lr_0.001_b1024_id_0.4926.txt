@@ -1,0 +1,313 @@
+************source data info************
+n_users=713, n_items=4759
+n_interactions=6658
+n_train=5945, n_test=713, sparsity=0.00196
+************target data info************
+n_users=713, n_items=3335
+n_interactions=8202
+n_train=7489, n_test=713, sparsity=0.00345
+without pretraining.
+
+*********source initial result**********
+pretrained model hit=['0.0997'],ndcg=['0.0416']
+
+*********target initial result**********
+pretrained model hit=['0.1055'],ndcg=['0.0465']
+target domain single train
+
+*************source result**************
+Epoch 0 [14.3s + 0.6s]: train==[1.1935=0.5915 + 0.6043], hit=['0.1057'], ndcg=['0.0486'] at full rating, #user=713
+
+*************target result**************
+Epoch 0 [14.3s + 0.8s]: train==[1.1935=0.5915 + 0.6043], hit=['0.1401'], ndcg=['0.0651'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 1 [7.6s + 0.6s]: train==[1.1687=0.5856 + 0.5847], hit=['0.1178'], ndcg=['0.0512'] at full rating, #user=713
+
+*************target result**************
+Epoch 1 [7.6s + 0.8s]: train==[1.1687=0.5856 + 0.5847], hit=['0.1505'], ndcg=['0.0746'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 2 [7.9s + 0.6s]: train==[1.1303=0.5759 + 0.5565], hit=['0.1148'], ndcg=['0.0462'] at full rating, #user=713
+
+*************target result**************
+Epoch 2 [7.9s + 0.8s]: train==[1.1303=0.5759 + 0.5565], hit=['0.1419'], ndcg=['0.0680'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 3 [7.4s + 0.8s]: train==[1.0850=0.5624 + 0.5255], hit=['0.0997'], ndcg=['0.0420'] at full rating, #user=713
+
+*************target result**************
+Epoch 3 [7.4s + 1.1s]: train==[1.0850=0.5624 + 0.5255], hit=['0.1246'], ndcg=['0.0629'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 4 [9.8s + 0.8s]: train==[1.0409=0.5421 + 0.5006], hit=['0.1178'], ndcg=['0.0484'] at full rating, #user=713
+
+*************target result**************
+Epoch 4 [9.8s + 1.2s]: train==[1.0409=0.5421 + 0.5006], hit=['0.1298'], ndcg=['0.0663'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 5 [9.9s + 0.8s]: train==[1.0017=0.5230 + 0.4807], hit=['0.1269'], ndcg=['0.0531'] at full rating, #user=713
+
+*************target result**************
+Epoch 5 [9.9s + 1.1s]: train==[1.0017=0.5230 + 0.4807], hit=['0.1436'], ndcg=['0.0728'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 6 [9.1s + 0.7s]: train==[0.9652=0.5019 + 0.4650], hit=['0.1299'], ndcg=['0.0527'] at full rating, #user=713
+
+*************target result**************
+Epoch 6 [9.1s + 1.3s]: train==[0.9652=0.5019 + 0.4650], hit=['0.1574'], ndcg=['0.0802'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 7 [8.9s + 0.8s]: train==[0.9363=0.4849 + 0.4526], hit=['0.1480'], ndcg=['0.0606'] at full rating, #user=713
+
+*************target result**************
+Epoch 7 [8.9s + 1.0s]: train==[0.9363=0.4849 + 0.4526], hit=['0.1990'], ndcg=['0.0948'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 8 [9.7s + 0.8s]: train==[0.9106=0.4689 + 0.4426], hit=['0.1269'], ndcg=['0.0590'] at full rating, #user=713
+
+*************target result**************
+Epoch 8 [9.7s + 1.2s]: train==[0.9106=0.4689 + 0.4426], hit=['0.2145'], ndcg=['0.1062'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 9 [11.4s + 0.8s]: train==[0.8885=0.4578 + 0.4314], hit=['0.1360'], ndcg=['0.0625'] at full rating, #user=713
+
+*************target result**************
+Epoch 9 [11.4s + 0.9s]: train==[0.8885=0.4578 + 0.4314], hit=['0.2422'], ndcg=['0.1220'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 10 [8.7s + 0.6s]: train==[0.8671=0.4446 + 0.4235], hit=['0.1450'], ndcg=['0.0685'] at full rating, #user=713
+
+*************target result**************
+Epoch 10 [8.7s + 0.9s]: train==[0.8671=0.4446 + 0.4235], hit=['0.2647'], ndcg=['0.1355'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 11 [8.9s + 0.7s]: train==[0.8520=0.4355 + 0.4182], hit=['0.1511'], ndcg=['0.0733'] at full rating, #user=713
+
+*************target result**************
+Epoch 11 [8.9s + 0.9s]: train==[0.8520=0.4355 + 0.4182], hit=['0.2664'], ndcg=['0.1423'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 12 [9.2s + 0.8s]: train==[0.8397=0.4256 + 0.4133], hit=['0.1662'], ndcg=['0.0820'] at full rating, #user=713
+
+*************target result**************
+Epoch 12 [9.2s + 0.9s]: train==[0.8397=0.4256 + 0.4133], hit=['0.2855'], ndcg=['0.1522'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 13 [7.8s + 0.8s]: train==[0.8278=0.4190 + 0.4075], hit=['0.1662'], ndcg=['0.0865'] at full rating, #user=713
+
+*************target result**************
+Epoch 13 [7.8s + 0.9s]: train==[0.8278=0.4190 + 0.4075], hit=['0.2993'], ndcg=['0.1613'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 14 [8.7s + 0.7s]: train==[0.8188=0.4136 + 0.4039], hit=['0.1813'], ndcg=['0.0908'] at full rating, #user=713
+
+*************target result**************
+Epoch 14 [8.7s + 1.0s]: train==[0.8188=0.4136 + 0.4039], hit=['0.3062'], ndcg=['0.1684'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 15 [8.6s + 0.7s]: train==[0.8054=0.4070 + 0.3990], hit=['0.1934'], ndcg=['0.1037'] at full rating, #user=713
+
+*************target result**************
+Epoch 15 [8.6s + 1.1s]: train==[0.8054=0.4070 + 0.3990], hit=['0.3097'], ndcg=['0.1697'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 16 [8.2s + 0.8s]: train==[0.7978=0.4019 + 0.3973], hit=['0.1843'], ndcg=['0.1045'] at full rating, #user=713
+
+*************target result**************
+Epoch 16 [8.2s + 1.0s]: train==[0.7978=0.4019 + 0.3973], hit=['0.3218'], ndcg=['0.1774'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 17 [9.0s + 0.7s]: train==[0.7910=0.3984 + 0.3933], hit=['0.1903'], ndcg=['0.1058'] at full rating, #user=713
+
+*************target result**************
+Epoch 17 [9.0s + 0.9s]: train==[0.7910=0.3984 + 0.3933], hit=['0.3270'], ndcg=['0.1812'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 18 [8.5s + 0.8s]: train==[0.7843=0.3934 + 0.3907], hit=['0.1873'], ndcg=['0.1035'] at full rating, #user=713
+
+*************target result**************
+Epoch 18 [8.5s + 1.1s]: train==[0.7843=0.3934 + 0.3907], hit=['0.3270'], ndcg=['0.1816'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 19 [8.7s + 0.8s]: train==[0.7801=0.3918 + 0.3889], hit=['0.1994'], ndcg=['0.1104'] at full rating, #user=713
+
+*************target result**************
+Epoch 19 [8.7s + 1.1s]: train==[0.7801=0.3918 + 0.3889], hit=['0.3443'], ndcg=['0.1905'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 20 [9.1s + 0.5s]: train==[0.7753=0.3880 + 0.3870], hit=['0.1903'], ndcg=['0.1014'] at full rating, #user=713
+
+*************target result**************
+Epoch 20 [9.1s + 0.8s]: train==[0.7753=0.3880 + 0.3870], hit=['0.3426'], ndcg=['0.1925'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 21 [7.9s + 0.6s]: train==[0.7729=0.3862 + 0.3862], hit=['0.1903'], ndcg=['0.1000'] at full rating, #user=713
+
+*************target result**************
+Epoch 21 [7.9s + 0.9s]: train==[0.7729=0.3862 + 0.3862], hit=['0.3529'], ndcg=['0.1969'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 22 [8.8s + 1.0s]: train==[0.7657=0.3823 + 0.3833], hit=['0.1903'], ndcg=['0.1035'] at full rating, #user=713
+
+*************target result**************
+Epoch 22 [8.8s + 0.7s]: train==[0.7657=0.3823 + 0.3833], hit=['0.3616'], ndcg=['0.2015'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 23 [7.8s + 0.7s]: train==[0.7629=0.3805 + 0.3822], hit=['0.1843'], ndcg=['0.1014'] at full rating, #user=713
+
+*************target result**************
+Epoch 23 [7.8s + 0.9s]: train==[0.7629=0.3805 + 0.3822], hit=['0.3581'], ndcg=['0.2007'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 24 [7.6s + 0.6s]: train==[0.7608=0.3800 + 0.3814], hit=['0.1903'], ndcg=['0.1056'] at full rating, #user=713
+
+*************target result**************
+Epoch 24 [7.6s + 0.8s]: train==[0.7608=0.3800 + 0.3814], hit=['0.3460'], ndcg=['0.2017'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 25 [7.5s + 0.6s]: train==[0.7584=0.3781 + 0.3799], hit=['0.1903'], ndcg=['0.1069'] at full rating, #user=713
+
+*************target result**************
+Epoch 25 [7.5s + 0.9s]: train==[0.7584=0.3781 + 0.3799], hit=['0.3599'], ndcg=['0.2064'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 26 [7.9s + 0.6s]: train==[0.7568=0.3767 + 0.3790], hit=['0.2054'], ndcg=['0.1187'] at full rating, #user=713
+
+*************target result**************
+Epoch 26 [7.9s + 0.9s]: train==[0.7568=0.3767 + 0.3790], hit=['0.3668'], ndcg=['0.2126'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 27 [8.0s + 0.6s]: train==[0.7539=0.3748 + 0.3787], hit=['0.2054'], ndcg=['0.1160'] at full rating, #user=713
+
+*************target result**************
+Epoch 27 [8.0s + 0.9s]: train==[0.7539=0.3748 + 0.3787], hit=['0.3581'], ndcg=['0.2123'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 28 [8.7s + 0.6s]: train==[0.7505=0.3733 + 0.3772], hit=['0.1934'], ndcg=['0.1181'] at full rating, #user=713
+
+*************target result**************
+Epoch 28 [8.7s + 1.1s]: train==[0.7505=0.3733 + 0.3772], hit=['0.3616'], ndcg=['0.2144'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 29 [8.3s + 0.7s]: train==[0.7477=0.3731 + 0.3755], hit=['0.1873'], ndcg=['0.1116'] at full rating, #user=713
+
+*************target result**************
+Epoch 29 [8.3s + 1.0s]: train==[0.7477=0.3731 + 0.3755], hit=['0.3685'], ndcg=['0.2146'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 30 [8.1s + 0.6s]: train==[0.7464=0.3713 + 0.3756], hit=['0.1934'], ndcg=['0.1123'] at full rating, #user=713
+
+*************target result**************
+Epoch 30 [8.1s + 0.9s]: train==[0.7464=0.3713 + 0.3756], hit=['0.3737'], ndcg=['0.2175'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 31 [8.1s + 0.7s]: train==[0.7463=0.3711 + 0.3753], hit=['0.1752'], ndcg=['0.1022'] at full rating, #user=713
+
+*************target result**************
+Epoch 31 [8.1s + 0.9s]: train==[0.7463=0.3711 + 0.3753], hit=['0.3875'], ndcg=['0.2245'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 32 [8.4s + 0.6s]: train==[0.7438=0.3698 + 0.3735], hit=['0.1964'], ndcg=['0.1095'] at full rating, #user=713
+
+*************target result**************
+Epoch 32 [8.4s + 1.1s]: train==[0.7438=0.3698 + 0.3735], hit=['0.3772'], ndcg=['0.2209'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 33 [8.5s + 0.7s]: train==[0.7426=0.3700 + 0.3723], hit=['0.1903'], ndcg=['0.1122'] at full rating, #user=713
+
+*************target result**************
+Epoch 33 [8.5s + 0.9s]: train==[0.7426=0.3700 + 0.3723], hit=['0.3789'], ndcg=['0.2219'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 34 [7.9s + 0.7s]: train==[0.7423=0.3697 + 0.3725], hit=['0.1994'], ndcg=['0.1134'] at full rating, #user=713
+
+*************target result**************
+Epoch 34 [7.9s + 1.0s]: train==[0.7423=0.3697 + 0.3725], hit=['0.3806'], ndcg=['0.2191'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 35 [9.3s + 0.6s]: train==[0.7405=0.3689 + 0.3720], hit=['0.1934'], ndcg=['0.1174'] at full rating, #user=713
+
+*************target result**************
+Epoch 35 [9.3s + 0.9s]: train==[0.7405=0.3689 + 0.3720], hit=['0.3858'], ndcg=['0.2201'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 36 [8.4s + 0.6s]: train==[0.7389=0.3674 + 0.3714], hit=['0.2115'], ndcg=['0.1242'] at full rating, #user=713
+
+*************target result**************
+Epoch 36 [8.4s + 0.9s]: train==[0.7389=0.3674 + 0.3714], hit=['0.3893'], ndcg=['0.2190'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 37 [8.9s + 0.6s]: train==[0.7392=0.3670 + 0.3716], hit=['0.1994'], ndcg=['0.1202'] at full rating, #user=713
+
+*************target result**************
+Epoch 37 [8.9s + 0.8s]: train==[0.7392=0.3670 + 0.3716], hit=['0.3806'], ndcg=['0.2131'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 38 [8.8s + 0.7s]: train==[0.7375=0.3670 + 0.3699], hit=['0.2024'], ndcg=['0.1162'] at full rating, #user=713
+
+*************target result**************
+Epoch 38 [8.8s + 1.0s]: train==[0.7375=0.3670 + 0.3699], hit=['0.3789'], ndcg=['0.2144'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 39 [9.0s + 0.7s]: train==[0.7362=0.3665 + 0.3692], hit=['0.1994'], ndcg=['0.1180'] at full rating, #user=713
+
+*************target result**************
+Epoch 39 [9.0s + 1.2s]: train==[0.7362=0.3665 + 0.3692], hit=['0.3754'], ndcg=['0.2124'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 40 [9.3s + 0.7s]: train==[0.7338=0.3655 + 0.3684], hit=['0.1873'], ndcg=['0.1154'] at full rating, #user=713
+
+*************target result**************
+Epoch 40 [9.3s + 1.0s]: train==[0.7338=0.3655 + 0.3684], hit=['0.3772'], ndcg=['0.2150'] at full rating, #user=713
+target domain single train
+
+*************source result**************
+Epoch 41 [8.8s + 0.6s]: train==[0.7335=0.3646 + 0.3687], hit=['0.2024'], ndcg=['0.1161'] at full rating, #user=713
+
+*************target result**************
+Epoch 41 [8.8s + 0.9s]: train==[0.7335=0.3646 + 0.3687], hit=['0.3824'], ndcg=['0.2185'] at full rating, #user=713
+**************source part***************
+Best Iter=[36]@[462.8]	 hit=['0.2115'], ndcg=['0.1242']
+**************target part***************
+Best Iter=[36]@[462.8]	 hit=['0.3893'], ndcg=['0.2190']

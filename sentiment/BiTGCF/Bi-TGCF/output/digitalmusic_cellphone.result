@@ -1,0 +1,11 @@
+
+ lr=0.0010, layer_fun=gcf,fuse_type_in =la2add,neg_num=4, n_interaction=3,connect_type=concat
+	source result
+Best Iter=[24]@[353.9]	 hit=['0.3910'], ndcg=['0.2180']
+target result
+Best Iter=[28]@[353.9]	 hit=['0.1934'], ndcg=['0.1086']
+ lr=0.0010, layer_fun=gcf,fuse_type_in =la2add,neg_num=4, n_interaction=3,connect_type=concat
+	source result
+Best Iter=[20]@[260.9]	 hit=['0.3685'], ndcg=['0.8557']
+target result
+Best Iter=[20]@[260.9]	 hit=['0.1813'], ndcg=['0.8376']

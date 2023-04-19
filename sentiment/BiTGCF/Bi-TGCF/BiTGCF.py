@@ -124,9 +124,9 @@ class BiTGCF(object):
                                                                           self.i_g_embeddings_s,self.label_s,self.scores_s)
         self.mf_loss_t, self.emb_loss_t, self.reg_loss_t  = self.create_cross_loss(self.u_g_embeddings_t,
                                                                           self.i_g_embeddings_t,self.label_t,self.scores_t)
-        self.loss_source = self.mf_loss_s + self.emb_loss_s + self.reg_loss_s
-        self.loss_target = self.mf_loss_t + self.emb_loss_t + self.reg_loss_t
-        self.loss = self.weight_source * self.loss_source + self.weight_target * self.loss_target
+        self.loss_source = (self.mf_loss_s + self.emb_loss_s + self.reg_loss_s)
+        self.loss_target = (self.mf_loss_t + self.emb_loss_t + self.reg_loss_t)
+        self.loss = (self.weight_source * self.loss_source + self.weight_target * self.loss_target)
         self.opt = tf.compat.v1.train.AdamOptimizer(learning_rate=self.lr).minimize(self.loss)
         self.opt_s = tf.compat.v1.train.AdamOptimizer(learning_rate=self.lr).minimize(self.loss_source,var_list=[self.weights_source])
         self.opt_t = tf.compat.v1.train.AdamOptimizer(learning_rate=self.lr).minimize(self.loss_target,var_list=[self.weights_target])
