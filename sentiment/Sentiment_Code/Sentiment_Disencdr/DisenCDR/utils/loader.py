@@ -130,7 +130,7 @@ class DataLoader(object):
                             continue
                         ret.append(rand)
                         break
-                    scores.append(0)
+                    scores.append(0.5)
                 test_data.append([line[0],ret, scores])
         
         print("No users: ", user_no)
