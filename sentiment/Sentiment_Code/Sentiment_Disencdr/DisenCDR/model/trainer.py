@@ -67,7 +67,7 @@ class CrossTrainer(Trainer):
             sent_score = inputs[2]
         return user_index, item_index, sent_score
 
-    def unpack_batch(self, batch):
+    def unpack_batch(self, batch):   # to change
         if self.opt["cuda"]:
             inputs = [Variable(b.cuda()) for b in batch]
             user = inputs[0]
@@ -75,6 +75,7 @@ class CrossTrainer(Trainer):
             source_neg_item = inputs[2]
             target_pos_item = inputs[3]
             target_neg_item = inputs[4]
+            sent_score = inputs[5]
         else:
             inputs = [Variable(b) for b in batch]
             user = inputs[0]
@@ -82,7 +83,8 @@ class CrossTrainer(Trainer):
             source_neg_item = inputs[2]
             target_pos_item = inputs[3]
             target_neg_item = inputs[4]
-        return user, source_pos_item, source_neg_item, target_pos_item, target_neg_item
+            sent_score = inputs[5]
+        return user, source_pos_item, source_neg_item, target_pos_item, target_neg_item, sent_score
 
     def HingeLoss(self, pos, neg):
         gamma = torch.tensor(self.opt["margin"])
@@ -140,7 +142,7 @@ class CrossTrainer(Trainer):
         self.model.train()
         self.optimizer.zero_grad()
 
-        user, source_pos_item, source_neg_item, target_pos_item, target_neg_item = self.unpack_batch(batch)
+        user, source_pos_item, source_neg_item, target_pos_item, target_neg_item,sent_scores = self.unpack_batch(batch)
 
         if epoch<10:
             self.source_user, self.source_item, self.target_user, self.target_item = self.model.wramup(source_UV,source_VU,target_UV,target_VU)
@@ -161,13 +163,26 @@ class CrossTrainer(Trainer):
         pos_target_score = self.model.target_predict_dot(target_user_feature, target_item_pos_feature)
         neg_target_score = self.model.target_predict_dot(target_user_feature, target_item_neg_feature)
 
-        pos_labels, neg_labels = torch.ones(pos_source_score.size()), torch.zeros(
-            pos_source_score.size())
+        # to change
+        # pos_labels, neg_labels = torch.ones(pos_source_score.size()), torch.zeros(
+        #     pos_source_score.size())
+        
+        # val = 0         # for zero
+        val = 0.5       # for 0.5
+        # val = torch.mean(sent_scores)  #for mean score
+        
+        neg_labels = val * torch.ones(pos_source_score.size())
+        
+        pos_labels = sent_scores
+        if pos_labels.size() != pos_source_score.size():
+            print(".........bruhhhh.......")
+            exit()
+        
 
         if self.opt["cuda"]:
             pos_labels = pos_labels.cuda()
             neg_labels = neg_labels.cuda()
-
+# python3 -u .\train_rec.py --num_epoch 5 --dataset phones_music --sentiment sentiment_rating
 
         loss = self.criterion(pos_source_score, pos_labels) + \
                self.criterion(neg_source_score, neg_labels) + \
@@ -179,3 +194,13 @@ class CrossTrainer(Trainer):
         loss.backward()
         self.optimizer.step()
         return loss.item()
+    
+
+
+    # loss > pos/neg label(1,0 -> (sents,0)) > train_batch(sent score access)
+    #   > loader {
+    #   (training sample with sents + 4 OG attributes) > 
+    #   train_data(scores in read_data()) > 
+    #   preprocess( #156 sent append in list[])
+    #   > get_item(#205) return sent scores tooo > access input[5] as 
+    #     sent in unpack_batch >  use in recsonsturct()
