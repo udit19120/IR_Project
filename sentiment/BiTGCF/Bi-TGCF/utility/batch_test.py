@@ -61,7 +61,7 @@ def test(sess, model, data_generator, test_user_list, data_type, batch_size, ks,
             max_idx = np.min([(current_batch+1)*batch_size, len(users)])
             batch_input_users = users[min_idx:max_idx]
             batch_input_items = items[min_idx:max_idx]
-            print(type(batch_input_items))
+            # print(type(batch_input_items))
             predictions = _sess.run(_model.scores_s, {_model.users_s: batch_input_users, _model.items_s: batch_input_items,
                                                       _model.node_dropout: [0.]*len(eval(_layer_size)),
                                                       _model.mess_dropout: [0.]*len(eval(_layer_size)),
@@ -146,6 +146,8 @@ def getHitRatio(ranklist, gtItem):
 def getNDCG(ranklist, gtItem, gt_sentiment_score):
     idcg = 0
     dcg = 0
+    if(gtItem not in ranklist):
+        return 0
     for i in range(len(ranklist)):
         item = ranklist[i]
         s_score = 0
@@ -157,7 +159,9 @@ def getNDCG(ranklist, gtItem, gt_sentiment_score):
     sents_sorted[0] = gt_sentiment_score
     for j in range(len(sents_sorted)):
         idcg += sents_sorted[j] / np.log2(j + 2)
-
+    
+    if(idcg == 0):
+        return 0
     ndcg = dcg/idcg
 
     return ndcg
