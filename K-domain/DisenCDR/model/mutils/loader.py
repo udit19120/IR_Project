@@ -113,6 +113,7 @@ class DataLoader(object):
         for i in range(len(self.source_ma_set)):
             ret = len(
                 self.source_ma_set[i]) / (len(self.source_ma_set[i]) + len(self.target_ma_set[i]))
+        print("im here in model mutils")
         return ret
 
     def preprocess_for_predict(self):

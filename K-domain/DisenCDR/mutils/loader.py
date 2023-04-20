@@ -143,8 +143,9 @@ class DataLoader(object):
         for i in range(self.opt['k']):
             v = np.zeros((len(self.ma_sets[0]), 1))
             for j in range(len(self.ma_sets[0])):
-                v[j] = len(self.ma_sets[i][j])/tot_len_list[j]
+                v = len(self.ma_sets[i][j])/tot_len_list[j]
             ret.append(v)
+        print("Im here in mutils")
 
         return ret
 

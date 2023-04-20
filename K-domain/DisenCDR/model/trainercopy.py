@@ -5,6 +5,7 @@ from torch.autograd import Variable
 from model.DisenCDRJcopy import DisenCDR
 from mutils import torch_utils
 
+
 class Trainer(object):
     def __init__(self, opt):
         raise NotImplementedError
@@ -38,13 +39,14 @@ class Trainer(object):
         except BaseException:
             print("[Warning: Saving failed... continuing anyway.]")
 
+
 class CrossTrainer(Trainer):
     def __init__(self, opt):
         self.opt = opt
         if self.opt["model"] == "DisenCDR":
             print('making disencdr')
             self.model = DisenCDR(opt)
-        else :
+        else:
             print("please input right model name!")
             exit(0)
 
@@ -52,7 +54,8 @@ class CrossTrainer(Trainer):
         if opt['cuda']:
             self.model.cuda()
             self.criterion.cuda()
-        self.optimizer = torch_utils.get_optimizer(opt['optim'], self.model.parameters(), opt['lr'])
+        self.optimizer = torch_utils.get_optimizer(
+            opt['optim'], [{"params": self.model.parameters()}]+self.model.params_dicts, opt['lr'])
         self.epoch_rec_loss = []
 
     def unpack_batch_predict(self, batch):
@@ -77,11 +80,11 @@ class CrossTrainer(Trainer):
             pos_items = [Variable(p.cuda()) for p in inputs[1]]
             neg_items = [Variable(n.cuda()) for n in inputs[2]]
         else:
-        #     inputs = [Variable(b) for b in batch]
-        #     user = inputs[0]
-        #     pos_item = inputs[1]
-        #     neg_item = inputs[2]
-        # return user, pos_item, neg_item
+            #     inputs = [Variable(b) for b in batch]
+            #     user = inputs[0]
+            #     pos_item = inputs[1]
+            #     neg_item = inputs[2]
+            # return user, pos_item, neg_item
             inputs = batch
             # inputs = [Variable(b) for b in batch]
             user = Variable(inputs[0])
@@ -133,43 +136,44 @@ class CrossTrainer(Trainer):
         ans = ans.view(tmp)
         return ans
 
-    def evaluate_embedding(self, UV, VU, adj = None):
+    def evaluate_embedding(self, UV, VU, adj=None):
         self.user, self.item = self.model(UV, VU)
 
     def for_bcelogit(self, x):
         y = 1 - x
-        return torch.cat((x,y), dim = -1)
-    
+        return torch.cat((x, y), dim=-1)
+
     def calculate_elbo_loss(self, scores, labels):
         loss = 0
         for i in range(len(scores)):
             loss += self.criterion(scores[i], labels[i])
-        
+
         return loss
-    
+
     def calculate_KLD_loss(self):
-        
+
         loss = 0
         for i in range(self.opt['k']):
             loss += self.model.domain_specific_GNNs[i].encoder[-1].kld_loss
-        
-        return loss
-            
 
-    def reconstruct_graph(self, batch, UV, VU, adj = None, epoch = 100):
+        return loss
+
+    def reconstruct_graph(self, batch, UV, VU, adj=None, epoch=100):
         self.model.train()
+        # print(epoch)
+        # print(self.model.params_dicts[0])
         self.optimizer.zero_grad()
 
         # user, source_pos_item, source_neg_item, target_pos_item, target_neg_item = self.unpack_batch(batch)
         user, pos_item, neg_item = self.unpack_batch(batch)
 
-        if epoch<2:
+        if epoch < 2:
             # self.source_user, self.source_item, self.target_user, self.target_item = self.model.warmup(source_UV,source_VU,target_UV,target_VU)
-            self.user, self.item = self.model.warmup(UV,VU)
+            self.user, self.item = self.model.warmup(UV, VU)
         else:
             # self.source_user, self.source_item, self.target_user, self.target_item = self.model(source_UV,source_VU, target_UV,target_VU)
             self.user, self.item = self.model(UV, VU)
-        
+
         K_user_features = []
         K_item_pos_features = []
         K_item_neg_features = []
@@ -177,20 +181,22 @@ class CrossTrainer(Trainer):
             user_feature = self.my_index_select(self.user[i], user)
             item_pos_feature = self.my_index_select(self.item[i], pos_item[i])
             item_neg_feature = self.my_index_select(self.item[i], neg_item[i])
-            
+
             K_user_features.append(user_feature)
             K_item_pos_features.append(item_pos_feature)
             K_item_neg_features.append(item_neg_feature)
-        
+
         pos_scores = []
         neg_scores = []
         for i in range(self.opt['k']):
-            pos_score = self.model.source_predict_dot(K_user_features[i], K_item_pos_features[i])
-            neg_score = self.model.source_predict_dot(K_user_features[i], K_item_neg_features[i])
-            
+            pos_score = self.model.source_predict_dot(
+                K_user_features[i], K_item_pos_features[i])
+            neg_score = self.model.source_predict_dot(
+                K_user_features[i], K_item_neg_features[i])
+
             pos_scores.append(pos_score)
             neg_scores.append(neg_score)
-        
+
         pos_labels = []
         neg_labels = []
         for i in range(self.opt['k']):
@@ -200,11 +206,13 @@ class CrossTrainer(Trainer):
         if self.opt["cuda"]:
             pos_labels = pos_labels.cuda()
             neg_labels = neg_labels.cuda()
-        
-        self.ELBO_loss = self.calculate_elbo_loss(pos_scores, pos_labels) + self.calculate_elbo_loss(neg_scores, neg_labels)
-        self.K_KLD_loss = self.calculate_KLD_loss() # change according to Jahnvi's code
-        
+
+        self.ELBO_loss = self.calculate_elbo_loss(
+            pos_scores, pos_labels) + self.calculate_elbo_loss(neg_scores, neg_labels)
+        self.K_KLD_loss = self.calculate_KLD_loss()  # change according to Jahnvi's code
+
         loss = self.ELBO_loss + self.K_KLD_loss + self.model.kld_loss
+        # loss = self.K_KLD_loss
 
         loss.backward()
         self.optimizer.step()
