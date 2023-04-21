@@ -32,8 +32,8 @@ parser.add_argument('--GNN', type=int, default=2, help='GNN layer.')
 parser.add_argument('--dropout', type=float, default=0.3, help='GNN layer dropout rate.')
 parser.add_argument('--optim', choices=['sgd', 'adagrad', 'adam', 'adamax'], default='adam',
                     help='Optimizer: sgd, adagrad, adam or adamax.')
-parser.add_argument('--lr', type=float, default=0.001, help='Applies to sgd and adagrad.')
-parser.add_argument('--lr_decay', type=float, default=0.9, help='Learning rate decay rate.')
+parser.add_argument('--lr', type=float, default=0.00001, help='Applies to sgd and adagrad.')
+parser.add_argument('--lr_decay', type=float, default=0.05, help='Learning rate decay rate.')
 parser.add_argument('--weight_decay', type=float, default=5e-4, help='Weight decay (L2 loss on parameters).')
 parser.add_argument('--decay_epoch', type=int, default=10, help='Decay learning rate after this epoch.')
 parser.add_argument('--leakey', type=float, default=0.1)
@@ -304,6 +304,8 @@ for epoch in range(1, opt['num_epoch'] + 1):
     # save
     if epoch == 1 or dev_score > max(dev_score_history):
         print("new best model saved.")
+        torch.save(trainer.model.state_dict(), "../models_saved/" +
+                 opt['dataset'] + "_" + opt['sentiment'] + "_mean.pth")
     if epoch % opt['save_epoch'] != 0:
         pass
 

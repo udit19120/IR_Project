@@ -1,0 +1,668 @@
+False
+number_user 713
+number_item 3213
+real graph loaded!
+number_user 713
+number_item 4363
+real graph loaded!
+graph loaded!
+Config saved to file ./saved_models/00/config.json
+
+Running with the following configs:
+	dataset : music_phones
+	model : DisenCDR
+	feature_dim : 128
+	hidden_dim : 128
+	GNN : 2
+	dropout : 0.3
+	optim : adam
+	lr : 0.001
+	lr_decay : 0.9
+	weight_decay : 0.0005
+	decay_epoch : 10
+	leakey : 0.1
+	cpu : False
+	cuda : False
+	beta : 0.9
+	num_epoch : 50
+	batch_size : 1024
+	log_step : 200
+	log : logs.txt
+	save_epoch : 100
+	save_dir : ./saved_models
+	id : 00
+	seed : 2040
+	load : False
+	model_file : None
+	sentiment : sentiment_scaled_rishi
+	number_user : 713
+	number_item : 4363
+	model_save_dir : ./saved_models/00
+
+
+Loading data from music_phones with batch size 1024...
+mean in loader: 0.6041751502203231
+../dataset/music_phones/test_sentiment_scaled_rishi.txt
+Shape of source test data:  584
+mean in loader: 0.7995086543313711
+../dataset/phones_music/test_sentiment_scaled_rishi.txt
+713 713
+mean in loader: 0.6041751502203231
+../dataset/music_phones/test_sentiment_scaled_rishi.txt
+Shape of source test data:  584
+mean in loader: 0.7995086543313711
+../dataset/phones_music/test_sentiment_scaled_rishi.txt
+713 713
+mean in loader: 0.6041751502203231
+../dataset/music_phones/test_sentiment_scaled_rishi.txt
+Shape of source test data:  584
+mean in loader: 0.7995086543313711
+../dataset/phones_music/test_sentiment_scaled_rishi.txt
+713 713
+user_num 713
+source_item_num 3213
+target_item_num 4363
+source train data : 7489, target train data 5945, source test data : 584, target test data : 305
+2023-04-19 15:51:07.310725: step 14/700 (epoch 1/50), loss = 987.247253 (3.172 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11145456943672243
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.09276845039709099
+Target domain HITS:  0.09508196721311475
+epoch 1: train_loss = 987.247253, source_hit = 0.1147, source_ndcg = 0.1115, target_hit = 0.0951, target_ndcg = 0.0928
+new best model saved.
+
+2023-04-19 15:51:11.347086: step 28/700 (epoch 2/50), loss = 551.331473 (3.691 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.08155271543440826
+Source domain HITS:  0.08561643835616438
+Target samples:  305.0
+Target Domain NDCG:  0.07696452347840664
+Target domain HITS:  0.07868852459016394
+epoch 2: train_loss = 551.331473, source_hit = 0.0856, source_ndcg = 0.0816, target_hit = 0.0787, target_ndcg = 0.0770
+
+2023-04-19 15:51:15.145595: step 42/700 (epoch 3/50), loss = 534.964543 (3.532 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.09190914304946907
+Source domain HITS:  0.0958904109589041
+Target samples:  305.0
+Target Domain NDCG:  0.07380066913557307
+Target domain HITS:  0.07540983606557378
+epoch 3: train_loss = 534.964543, source_hit = 0.0959, source_ndcg = 0.0919, target_hit = 0.0754, target_ndcg = 0.0738
+
+2023-04-19 15:51:19.025343: step 56/700 (epoch 4/50), loss = 533.547930 (3.572 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.09357315610041671
+Source domain HITS:  0.0976027397260274
+Target samples:  305.0
+Target Domain NDCG:  0.08364499202016967
+Target domain HITS:  0.08524590163934426
+epoch 4: train_loss = 533.547930, source_hit = 0.0976, source_ndcg = 0.0936, target_hit = 0.0852, target_ndcg = 0.0836
+
+2023-04-19 15:51:22.555357: step 70/700 (epoch 5/50), loss = 531.549225 (3.247 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.08711492944320168
+Source domain HITS:  0.09075342465753425
+Target samples:  305.0
+Target Domain NDCG:  0.07699632109467157
+Target domain HITS:  0.07868852459016394
+epoch 5: train_loss = 531.549225, source_hit = 0.0908, source_ndcg = 0.0871, target_hit = 0.0787, target_ndcg = 0.0770
+
+2023-04-19 15:51:26.189405: step 84/700 (epoch 6/50), loss = 530.567618 (3.313 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.09714871639779504
+Source domain HITS:  0.10102739726027397
+Target samples:  305.0
+Target Domain NDCG:  0.0993383613534653
+Target domain HITS:  0.10163934426229508
+epoch 6: train_loss = 530.567618, source_hit = 0.1010, source_ndcg = 0.0971, target_hit = 0.1016, target_ndcg = 0.0993
+new best model saved.
+
+2023-04-19 15:51:29.747363: step 98/700 (epoch 7/50), loss = 528.781764 (3.121 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.09890453294429287
+Source domain HITS:  0.10273972602739725
+Target samples:  305.0
+Target Domain NDCG:  0.11239187862348043
+Target domain HITS:  0.11475409836065574
+epoch 7: train_loss = 528.781764, source_hit = 0.1027, source_ndcg = 0.0989, target_hit = 0.1148, target_ndcg = 0.1124
+new best model saved.
+
+2023-04-19 15:51:33.463730: step 112/700 (epoch 8/50), loss = 527.997641 (3.267 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11039181936169352
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.10588510985621782
+Target domain HITS:  0.10819672131147541
+epoch 8: train_loss = 527.997641, source_hit = 0.1147, source_ndcg = 0.1104, target_hit = 0.1082, target_ndcg = 0.1059
+
+2023-04-19 15:51:36.788224: step 126/700 (epoch 9/50), loss = 527.128300 (3.060 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10886934997683949
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.09640637530125555
+Target domain HITS:  0.09836065573770492
+epoch 9: train_loss = 527.128300, source_hit = 0.1130, source_ndcg = 0.1089, target_hit = 0.0984, target_ndcg = 0.0964
+
+2023-04-19 15:51:42.385678: step 140/700 (epoch 10/50), loss = 747.142875 (5.291 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10190136887395895
+Source domain HITS:  0.10616438356164383
+Target samples:  305.0
+Target Domain NDCG:  0.08968199047397077
+Target domain HITS:  0.09180327868852459
+epoch 10: train_loss = 747.142875, source_hit = 0.1062, source_ndcg = 0.1019, target_hit = 0.0918, target_ndcg = 0.0897
+
+2023-04-19 15:51:47.890401: step 154/700 (epoch 11/50), loss = 608.801047 (5.225 sec/batch), lr: 0.001000
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10527433875489019
+Source domain HITS:  0.1095890410958904
+Target samples:  305.0
+Target Domain NDCG:  0.08323671328598149
+Target domain HITS:  0.08524590163934426
+epoch 11: train_loss = 608.801047, source_hit = 0.1096, source_ndcg = 0.1053, target_hit = 0.0852, target_ndcg = 0.0832
+
+2023-04-19 15:51:54.050191: step 168/700 (epoch 12/50), loss = 591.160531 (5.851 sec/batch), lr: 0.000900
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11054301107212039
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.08002239642112818
+Target domain HITS:  0.08196721311475409
+epoch 12: train_loss = 591.160531, source_hit = 0.1147, source_ndcg = 0.1105, target_hit = 0.0820, target_ndcg = 0.0800
+
+2023-04-19 15:51:59.436484: step 182/700 (epoch 13/50), loss = 587.305908 (5.118 sec/batch), lr: 0.000810
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10905255297378551
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.07695371147035665
+Target domain HITS:  0.07868852459016394
+epoch 13: train_loss = 587.305908, source_hit = 0.1130, source_ndcg = 0.1091, target_hit = 0.0787, target_ndcg = 0.0770
+
+2023-04-19 15:52:05.015770: step 196/700 (epoch 14/50), loss = 586.314431 (5.322 sec/batch), lr: 0.000729
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10879201265760574
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.05800340058689732
+Target domain HITS:  0.05901639344262295
+epoch 14: train_loss = 586.314431, source_hit = 0.1130, source_ndcg = 0.1088, target_hit = 0.0590, target_ndcg = 0.0580
+
+2023-04-19 15:52:11.013926: step 210/700 (epoch 15/50), loss = 585.855573 (5.618 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10723511366551719
+Source domain HITS:  0.1113013698630137
+Target samples:  305.0
+Target Domain NDCG:  0.061358667810667206
+Target domain HITS:  0.06229508196721312
+epoch 15: train_loss = 585.855573, source_hit = 0.1113, source_ndcg = 0.1072, target_hit = 0.0623, target_ndcg = 0.0614
+
+2023-04-19 15:52:16.338865: step 224/700 (epoch 16/50), loss = 583.468009 (5.073 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.103992901103493
+Source domain HITS:  0.10787671232876712
+Target samples:  305.0
+Target Domain NDCG:  0.067621554389528
+Target domain HITS:  0.06885245901639345
+epoch 16: train_loss = 583.468009, source_hit = 0.1079, source_ndcg = 0.1040, target_hit = 0.0689, target_ndcg = 0.0676
+
+2023-04-19 15:52:21.670170: step 238/700 (epoch 17/50), loss = 583.718602 (5.060 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10565203729315997
+Source domain HITS:  0.1095890410958904
+Target samples:  305.0
+Target Domain NDCG:  0.07097560082654719
+Target domain HITS:  0.07213114754098361
+epoch 17: train_loss = 583.718602, source_hit = 0.1096, source_ndcg = 0.1057, target_hit = 0.0721, target_ndcg = 0.0710
+
+2023-04-19 15:52:27.185013: step 252/700 (epoch 18/50), loss = 585.237723 (5.243 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11064445544455605
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.08047029797149145
+Target domain HITS:  0.08196721311475409
+epoch 18: train_loss = 585.237723, source_hit = 0.1147, source_ndcg = 0.1106, target_hit = 0.0820, target_ndcg = 0.0805
+
+2023-04-19 15:52:32.816868: step 266/700 (epoch 19/50), loss = 583.759439 (5.376 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11059068966160149
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.08364513028401452
+Target domain HITS:  0.08524590163934426
+epoch 19: train_loss = 583.759439, source_hit = 0.1147, source_ndcg = 0.1106, target_hit = 0.0852, target_ndcg = 0.0836
+
+2023-04-19 15:52:37.960511: step 280/700 (epoch 20/50), loss = 583.113817 (4.895 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11055886343893988
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.08365148317900982
+Target domain HITS:  0.08524590163934426
+epoch 20: train_loss = 583.113817, source_hit = 0.1147, source_ndcg = 0.1106, target_hit = 0.0852, target_ndcg = 0.0837
+
+2023-04-19 15:52:44.060299: step 294/700 (epoch 21/50), loss = 579.096919 (5.782 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10874188194309384
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.0866993842312617
+Target domain HITS:  0.08852459016393442
+epoch 21: train_loss = 579.096919, source_hit = 0.1130, source_ndcg = 0.1087, target_hit = 0.0885, target_ndcg = 0.0867
+
+2023-04-19 15:52:50.322212: step 308/700 (epoch 22/50), loss = 580.027331 (5.981 sec/batch), lr: 0.000656
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10537212634503174
+Source domain HITS:  0.1095890410958904
+Target samples:  305.0
+Target Domain NDCG:  0.07405657778857218
+Target domain HITS:  0.07540983606557378
+epoch 22: train_loss = 580.027331, source_hit = 0.1096, source_ndcg = 0.1054, target_hit = 0.0754, target_ndcg = 0.0741
+
+2023-04-19 15:52:57.129519: step 322/700 (epoch 23/50), loss = 581.584250 (6.382 sec/batch), lr: 0.000590
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10220870017267808
+Source domain HITS:  0.10616438356164383
+Target samples:  305.0
+Target Domain NDCG:  0.06440782025456997
+Target domain HITS:  0.06557377049180328
+epoch 23: train_loss = 581.584250, source_hit = 0.1062, source_ndcg = 0.1022, target_hit = 0.0656, target_ndcg = 0.0644
+
+2023-04-19 15:53:03.318367: step 336/700 (epoch 24/50), loss = 580.013759 (5.814 sec/batch), lr: 0.000531
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1022087364171963
+Source domain HITS:  0.10616438356164383
+Target samples:  305.0
+Target Domain NDCG:  0.06751671530462872
+Target domain HITS:  0.06885245901639345
+epoch 24: train_loss = 580.013759, source_hit = 0.1062, source_ndcg = 0.1022, target_hit = 0.0689, target_ndcg = 0.0675
+
+2023-04-19 15:53:09.488918: step 350/700 (epoch 25/50), loss = 577.540052 (5.851 sec/batch), lr: 0.000531
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10073136169518371
+Source domain HITS:  0.10445205479452055
+Target samples:  305.0
+Target Domain NDCG:  0.06427418515212693
+Target domain HITS:  0.06557377049180328
+epoch 25: train_loss = 577.540052, source_hit = 0.1045, source_ndcg = 0.1007, target_hit = 0.0656, target_ndcg = 0.0643
+
+2023-04-19 15:53:15.331756: step 364/700 (epoch 26/50), loss = 579.395434 (5.567 sec/batch), lr: 0.000478
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10071231592300854
+Source domain HITS:  0.10445205479452055
+Target samples:  305.0
+Target Domain NDCG:  0.06430350427741505
+Target domain HITS:  0.06557377049180328
+epoch 26: train_loss = 579.395434, source_hit = 0.1045, source_ndcg = 0.1007, target_hit = 0.0656, target_ndcg = 0.0643
+
+2023-04-19 15:53:20.796066: step 378/700 (epoch 27/50), loss = 579.712472 (5.177 sec/batch), lr: 0.000478
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1057574719499225
+Source domain HITS:  0.1095890410958904
+Target samples:  305.0
+Target Domain NDCG:  0.06749648733993979
+Target domain HITS:  0.06885245901639345
+epoch 27: train_loss = 579.712472, source_hit = 0.1096, source_ndcg = 0.1058, target_hit = 0.0689, target_ndcg = 0.0675
+
+2023-04-19 15:53:26.503743: step 392/700 (epoch 28/50), loss = 580.130938 (5.431 sec/batch), lr: 0.000478
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.105591149726044
+Source domain HITS:  0.1095890410958904
+Target samples:  305.0
+Target Domain NDCG:  0.06767855437920663
+Target domain HITS:  0.06885245901639345
+epoch 28: train_loss = 580.130938, source_hit = 0.1096, source_ndcg = 0.1056, target_hit = 0.0689, target_ndcg = 0.0677
+
+2023-04-19 15:53:32.299041: step 406/700 (epoch 29/50), loss = 578.311990 (5.561 sec/batch), lr: 0.000478
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.115497175817649
+Source domain HITS:  0.11986301369863013
+Target samples:  305.0
+Target Domain NDCG:  0.07712053714323647
+Target domain HITS:  0.07868852459016394
+epoch 29: train_loss = 578.311990, source_hit = 0.1199, source_ndcg = 0.1155, target_hit = 0.0787, target_ndcg = 0.0771
+
+2023-04-19 15:53:37.837096: step 420/700 (epoch 30/50), loss = 578.792245 (5.274 sec/batch), lr: 0.000478
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11545330449407025
+Source domain HITS:  0.11986301369863013
+Target samples:  305.0
+Target Domain NDCG:  0.07399400833224615
+Target domain HITS:  0.07540983606557378
+epoch 30: train_loss = 578.792245, source_hit = 0.1199, source_ndcg = 0.1155, target_hit = 0.0754, target_ndcg = 0.0740
+
+2023-04-19 15:53:43.372253: step 434/700 (epoch 31/50), loss = 577.785675 (5.227 sec/batch), lr: 0.000430
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.12037809973165972
+Source domain HITS:  0.125
+Target samples:  305.0
+Target Domain NDCG:  0.06772550882490404
+Target domain HITS:  0.06885245901639345
+epoch 31: train_loss = 577.785675, source_hit = 0.1250, source_ndcg = 0.1204, target_hit = 0.0689, target_ndcg = 0.0677
+
+2023-04-19 15:53:49.129459: step 448/700 (epoch 32/50), loss = 576.678663 (5.502 sec/batch), lr: 0.000387
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10888559668870076
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.0645416503936826
+Target domain HITS:  0.06557377049180328
+epoch 32: train_loss = 576.678663, source_hit = 0.1130, source_ndcg = 0.1089, target_hit = 0.0656, target_ndcg = 0.0645
+
+2023-04-19 15:53:54.706441: step 462/700 (epoch 33/50), loss = 578.370383 (5.270 sec/batch), lr: 0.000349
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11374879571517625
+Source domain HITS:  0.11815068493150685
+Target samples:  305.0
+Target Domain NDCG:  0.0645891604036117
+Target domain HITS:  0.06557377049180328
+epoch 33: train_loss = 578.370383, source_hit = 0.1182, source_ndcg = 0.1137, target_hit = 0.0656, target_ndcg = 0.0646
+
+2023-04-19 15:54:00.093419: step 476/700 (epoch 34/50), loss = 579.457785 (5.103 sec/batch), lr: 0.000349
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11209388078852207
+Source domain HITS:  0.11643835616438356
+Target samples:  305.0
+Target Domain NDCG:  0.06122821154985366
+Target domain HITS:  0.06229508196721312
+epoch 34: train_loss = 579.457785, source_hit = 0.1164, source_ndcg = 0.1121, target_hit = 0.0623, target_ndcg = 0.0612
+
+2023-04-19 15:54:05.438663: step 490/700 (epoch 35/50), loss = 575.652771 (5.087 sec/batch), lr: 0.000314
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11220340718710631
+Source domain HITS:  0.11643835616438356
+Target samples:  305.0
+Target Domain NDCG:  0.06105805230084155
+Target domain HITS:  0.06229508196721312
+epoch 35: train_loss = 575.652771, source_hit = 0.1164, source_ndcg = 0.1122, target_hit = 0.0623, target_ndcg = 0.0611
+
+2023-04-19 15:54:10.758374: step 504/700 (epoch 36/50), loss = 576.456848 (5.033 sec/batch), lr: 0.000282
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11845226538965367
+Source domain HITS:  0.1232876712328767
+Target samples:  305.0
+Target Domain NDCG:  0.057829507207786915
+Target domain HITS:  0.05901639344262295
+epoch 36: train_loss = 576.456848, source_hit = 0.1233, source_ndcg = 0.1185, target_hit = 0.0590, target_ndcg = 0.0578
+
+2023-04-19 15:54:16.574404: step 518/700 (epoch 37/50), loss = 577.797450 (5.504 sec/batch), lr: 0.000254
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1119006477917875
+Source domain HITS:  0.11643835616438356
+Target samples:  305.0
+Target Domain NDCG:  0.06412844505778587
+Target domain HITS:  0.06557377049180328
+epoch 37: train_loss = 577.797450, source_hit = 0.1164, source_ndcg = 0.1119, target_hit = 0.0656, target_ndcg = 0.0641
+
+2023-04-19 15:54:21.964573: step 532/700 (epoch 38/50), loss = 576.160370 (5.100 sec/batch), lr: 0.000254
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1169313078319331
+Source domain HITS:  0.12157534246575342
+Target samples:  305.0
+Target Domain NDCG:  0.06416812823396947
+Target domain HITS:  0.06557377049180328
+epoch 38: train_loss = 576.160370, source_hit = 0.1216, source_ndcg = 0.1169, target_hit = 0.0656, target_ndcg = 0.0642
+
+2023-04-19 15:54:27.420823: step 546/700 (epoch 39/50), loss = 576.178720 (5.175 sec/batch), lr: 0.000254
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1119636480846815
+Source domain HITS:  0.11643835616438356
+Target samples:  305.0
+Target Domain NDCG:  0.060906938001701404
+Target domain HITS:  0.06229508196721312
+epoch 39: train_loss = 576.178720, source_hit = 0.1164, source_ndcg = 0.1120, target_hit = 0.0623, target_ndcg = 0.0609
+
+2023-04-19 15:54:32.545110: step 560/700 (epoch 40/50), loss = 577.245985 (4.879 sec/batch), lr: 0.000229
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11513431997085827
+Source domain HITS:  0.11986301369863013
+Target samples:  305.0
+Target Domain NDCG:  0.06090789093747464
+Target domain HITS:  0.06229508196721312
+epoch 40: train_loss = 577.245985, source_hit = 0.1199, source_ndcg = 0.1151, target_hit = 0.0623, target_ndcg = 0.0609
+
+2023-04-19 15:54:37.824052: step 574/700 (epoch 41/50), loss = 577.928715 (5.034 sec/batch), lr: 0.000229
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.12003814632049584
+Source domain HITS:  0.125
+Target samples:  305.0
+Target Domain NDCG:  0.05778061686217144
+Target domain HITS:  0.05901639344262295
+epoch 41: train_loss = 577.928715, source_hit = 0.1250, source_ndcg = 0.1200, target_hit = 0.0590, target_ndcg = 0.0578
+
+2023-04-19 15:54:43.077646: step 588/700 (epoch 42/50), loss = 575.187190 (4.993 sec/batch), lr: 0.000206
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.1199553429510841
+Source domain HITS:  0.125
+Target samples:  305.0
+Target Domain NDCG:  0.06422397787665185
+Target domain HITS:  0.06557377049180328
+epoch 42: train_loss = 575.187190, source_hit = 0.1250, source_ndcg = 0.1200, target_hit = 0.0656, target_ndcg = 0.0642
+
+2023-04-19 15:54:48.456117: step 602/700 (epoch 43/50), loss = 576.695190 (5.078 sec/batch), lr: 0.000206
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.12151939636004382
+Source domain HITS:  0.1267123287671233
+Target samples:  305.0
+Target Domain NDCG:  0.0609402942715289
+Target domain HITS:  0.06229508196721312
+epoch 43: train_loss = 576.695190, source_hit = 0.1267, source_ndcg = 0.1215, target_hit = 0.0623, target_ndcg = 0.0609
+
+2023-04-19 15:54:53.793381: step 616/700 (epoch 44/50), loss = 575.584534 (5.072 sec/batch), lr: 0.000185
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11832867480572237
+Source domain HITS:  0.1232876712328767
+Target samples:  305.0
+Target Domain NDCG:  0.06095280579757184
+Target domain HITS:  0.06229508196721312
+epoch 44: train_loss = 575.584534, source_hit = 0.1233, source_ndcg = 0.1183, target_hit = 0.0623, target_ndcg = 0.0610
+
+2023-04-19 15:54:59.244817: step 630/700 (epoch 45/50), loss = 575.953369 (5.199 sec/batch), lr: 0.000185
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11499586967487539
+Source domain HITS:  0.11986301369863013
+Target samples:  305.0
+Target Domain NDCG:  0.0673368853389074
+Target domain HITS:  0.06885245901639345
+epoch 45: train_loss = 575.953369, source_hit = 0.1199, source_ndcg = 0.1150, target_hit = 0.0689, target_ndcg = 0.0673
+
+2023-04-19 15:55:04.763302: step 644/700 (epoch 46/50), loss = 574.845481 (5.274 sec/batch), lr: 0.000185
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.11333231505288824
+Source domain HITS:  0.11815068493150685
+Target samples:  305.0
+Target Domain NDCG:  0.06746532894792144
+Target domain HITS:  0.06885245901639345
+epoch 46: train_loss = 574.845481, source_hit = 0.1182, source_ndcg = 0.1133, target_hit = 0.0689, target_ndcg = 0.0675
+
+2023-04-19 15:55:10.295233: step 658/700 (epoch 47/50), loss = 577.832838 (5.267 sec/batch), lr: 0.000185
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10996490219104008
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.06430745151277387
+Target domain HITS:  0.06557377049180328
+epoch 47: train_loss = 577.832838, source_hit = 0.1147, source_ndcg = 0.1100, target_hit = 0.0656, target_ndcg = 0.0643
+
+2023-04-19 15:55:16.068933: step 672/700 (epoch 48/50), loss = 576.593288 (5.451 sec/batch), lr: 0.000167
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10999503367606281
+Source domain HITS:  0.11472602739726027
+Target samples:  305.0
+Target Domain NDCG:  0.06431162771930381
+Target domain HITS:  0.06557377049180328
+epoch 48: train_loss = 576.593288, source_hit = 0.1147, source_ndcg = 0.1100, target_hit = 0.0656, target_ndcg = 0.0643
+
+2023-04-19 15:55:21.737445: step 686/700 (epoch 49/50), loss = 575.396964 (5.381 sec/batch), lr: 0.000167
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10830672881304838
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.061098899581588144
+Target domain HITS:  0.06229508196721312
+epoch 49: train_loss = 575.396964, source_hit = 0.1130, source_ndcg = 0.1083, target_hit = 0.0623, target_ndcg = 0.0611
+
+2023-04-19 15:55:26.889914: step 700/700 (epoch 50/50), loss = 576.670807 (4.896 sec/batch), lr: 0.000150
+Evaluating on dev set...
+Source Dev Batches:  1
+length of batch:  584
+Source samples:  584.0
+Source Domain NDCG:  0.10829683692291374
+Source domain HITS:  0.11301369863013698
+Target samples:  305.0
+Target Domain NDCG:  0.061099082710552456
+Target domain HITS:  0.06229508196721312
+epoch 50: train_loss = 576.670807, source_hit = 0.1130, source_ndcg = 0.1083, target_hit = 0.0623, target_ndcg = 0.0611
+

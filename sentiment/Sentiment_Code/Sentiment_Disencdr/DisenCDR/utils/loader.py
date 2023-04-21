@@ -23,7 +23,7 @@ class DataLoader(object):
         fileName = opt["sentiment"]
         source_train_data = f"../dataset/{filename}/" + "train_"+ fileName + ".txt"
         source_test_data = f"../dataset/{filename}/" + "test_"+ fileName + ".txt"
-        self.source_ma_set, self.source_ma_list, self.source_train_data, self.source_test_data, self.source_user, self.source_item = self.read_data(source_train_data, source_test_data)
+        self.source_ma_set, self.source_ma_list, self.source_train_data, self.source_test_data, self.source_user, self.source_item, self.src_mean = self.read_data(source_train_data, source_test_data)
       
         print("Shape of source test data: ",len(self.source_test_data))
       
@@ -36,7 +36,7 @@ class DataLoader(object):
         target_train_data = f"../dataset/{filename}/" + "train_"+ fileName + ".txt"
         target_test_data = f"../dataset/{filename}/" + "test_"+ fileName + ".txt"
         
-        self.target_ma_set, self.target_ma_list, self.target_train_data, self.target_test_data, self.target_user, self.target_item = self.read_data(target_train_data, target_test_data)
+        self.target_ma_set, self.target_ma_list, self.target_train_data, self.target_test_data, self.target_user, self.target_item, self.tar_mean = self.read_data(target_train_data, target_test_data)
         opt["target_user_num"] = len(self.target_user)
         opt["target_item_num"] = len(self.target_item)
 
@@ -73,6 +73,7 @@ class DataLoader(object):
         self.data = data
         
     def read_data(self, train_file, test_file):  # possible change
+        train_sent_ls = []
         with codecs.open(train_file, "r", encoding="utf-8") as infile:
             train_data = []
             user = {}
@@ -85,6 +86,7 @@ class DataLoader(object):
                 line[1] = int(line[1])
                 scores = float(line[2])
 
+                train_sent_ls.append(scores)
                 if user.get(line[0], "zxczxc") is "zxczxc":
                     user[line[0]] = len(user)
                 if item.get(line[1], "zxczxc") is "zxczxc":
@@ -101,6 +103,7 @@ class DataLoader(object):
                 ma[line[0]].add(line[1])
                 ma_list[line[0]].append(line[1])
 
+        # print('mean in loader:',np.mean(train_sent_ls))
         user_no = 0
         item_no = 0
         with codecs.open(test_file,"r",encoding="utf-8") as infile:
@@ -131,11 +134,16 @@ class DataLoader(object):
                         ret.append(rand)
                         break
                     scores.append(0.5)
+                    # scores.append(0)
+                    # scores.append(np.mean(train_sent_ls))
+
                 test_data.append([line[0],ret, scores])
         
-        print("No users: ", user_no)
-        print("No items: ", item_no)
-        return ma, ma_list, train_data, test_data, user, item
+        # print("No users: ", user_no)
+        # print("No items: ", item_no)
+
+        train_mean = np.mean(train_sent_ls)
+        return ma, ma_list, train_data, test_data, user, item, train_mean
 
     def rate(self):
         ret = []
@@ -158,9 +166,12 @@ class DataLoader(object):
         processed = []
         for d in self.source_train_data:
             d_ = [d[1], d[0]] 
-            processed.append(d_ + [-1] + [d[2]]) #this is of the form item, user, -1, weight
+            # print('in pre[pocess',self.src_mean)
+            processed.append(d_ + [-1] + [d[2]])
+            # processed.append(d_ + [-1] + [d[2], self.src_mean]) #this is of the form item, user, -1, weight, sent_mean
         for d in self.target_train_data:
-            processed.append([-1] + d + [d[2]]) #this is of the form -1,user, item,weight
+            processed.append(d_ + [-1] + [d[2]])
+            # processed.append([-1] + d + [d[2], self.tar_mean]) #this is of the form -1,user, item,weight, sent_mean
         return processed
 
     def find_pos(self,ma_list, user):
@@ -204,8 +215,9 @@ class DataLoader(object):
             target_pos_tmp = []
             user = []
             sent = []
+            # mean = []
             for b in batch:
-
+    
                 if b[0] == -1:
                     source_pos_tmp.append(self.find_pos(self.source_ma_list, b[1]))
                     target_pos_tmp.append(b[2])
@@ -216,9 +228,13 @@ class DataLoader(object):
                 target_neg_tmp.append(self.find_neg(self.target_ma_set, b[1], "target_item_num"))
                 user.append(b[1])
                 sent.append(b[3])
+                # mean.append(b[4])
             # print("ELSE in loader\n\n")
             # print(torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp))
+            # print('in get-item',torch.FloatTensor(mean))
+            # return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp), torch.FloatTensor(sent),torch.FloatTensor(mean))
             return (torch.LongTensor(user), torch.LongTensor(source_pos_tmp), torch.LongTensor(source_neg_tmp), torch.LongTensor(target_pos_tmp), torch.LongTensor(target_neg_tmp), torch.FloatTensor(sent))
+
     def __iter__(self):
         for i in range(self.__len__()):
             yield self.__getitem__(i)

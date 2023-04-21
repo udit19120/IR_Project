@@ -4,6 +4,8 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from model.DisenCDR import DisenCDR
 from utils import torch_utils
+import numpy as np
+from torch.nn.utils import clip_grad_norm_
 
 class Trainer(object):
     def __init__(self, opt):
@@ -76,6 +78,7 @@ class CrossTrainer(Trainer):
             target_pos_item = inputs[3]
             target_neg_item = inputs[4]
             sent_score = inputs[5]
+            # mean = inputs[6]
         else:
             inputs = [Variable(b) for b in batch]
             user = inputs[0]
@@ -84,7 +87,9 @@ class CrossTrainer(Trainer):
             target_pos_item = inputs[3]
             target_neg_item = inputs[4]
             sent_score = inputs[5]
+            # mean = inputs[6]
         return user, source_pos_item, source_neg_item, target_pos_item, target_neg_item, sent_score
+        return user, source_pos_item, source_neg_item, target_pos_item, target_neg_item, sent_score,mean
 
     def HingeLoss(self, pos, neg):
         gamma = torch.tensor(self.opt["margin"])
@@ -143,6 +148,8 @@ class CrossTrainer(Trainer):
         self.optimizer.zero_grad()
 
         user, source_pos_item, source_neg_item, target_pos_item, target_neg_item,sent_scores = self.unpack_batch(batch)
+        # user, source_pos_item, source_neg_item, target_pos_item, target_neg_item,sent_scores,mean = self.unpack_batch(batch)
+
 
         if epoch<10:
             self.source_user, self.source_item, self.target_user, self.target_item = self.model.wramup(source_UV,source_VU,target_UV,target_VU)
@@ -169,8 +176,10 @@ class CrossTrainer(Trainer):
         
         # val = 0         # for zero
         val = 0.5       # for 0.5
-        # val = torch.mean(sent_scores)  #for mean score
-        
+        # val =  mean  #for mean score
+        # neg_labels = val   # for mean
+        # print('mean in trainer:',val,torch.mean(val))
+
         neg_labels = val * torch.ones(pos_source_score.size())
         
         pos_labels = sent_scores
@@ -191,6 +200,9 @@ class CrossTrainer(Trainer):
                self.model.source_specific_GNN.encoder[-1].kld_loss + \
                self.model.target_specific_GNN.encoder[-1].kld_loss + self.model.kld_loss
 
+        # clipping_value = 1000 # arbitrary value of your choosing
+        # clip_grad_norm_(self.model.parameters(), clipping_value)
+        
         loss.backward()
         self.optimizer.step()
         return loss.item()
