@@ -98,8 +98,8 @@ if "DisenCDR" in opt["model"]:
     UV = []
     VU = []
     adj = []
-    fnames = ['cell_phones', 'digital', 'movies']
-    # fnames = ['movies', 'digital']
+    # fnames = ['cell_phones', 'digital', 'movies']
+    fnames = ['cell_phones', 'movies']
 
     # fnames = ['movies_digital_music', 'digital_music_movies']
 
@@ -230,14 +230,32 @@ for epoch in range(1, opt['num_epoch'] + 1):
             train_loss))
     for i in range(opt['k']):
         print("domain {} NDCG: {} HIT: {}".format(i, ndcgs[i], hits[i]))
-    dev_score = ndcgs[0]
+    # dev_score = (ndcgs[0]+ndcgs[1]+ndcgs[2])/3
+    dev_score = sum(ndcgs)/len(ndcgs)
+    print("mean ndcg {}".format(dev_score))
     print(max([dev_score] + dev_score_history))
-    file_logger.log(
-        "{}\t{:.6f}\t{:.4f}\t{:.4f}".format(epoch, train_loss, dev_score, max([dev_score] + dev_score_history)))
+    # file_logger.log(
+    #     "{}\t{:.6f}\t{:.4f}\t{:.4f}".format(epoch, train_loss, dev_score, max([dev_score] + dev_score_history)))
+    s_log = ""
+    s_log += str(epoch)+"\n"
+    for i in range(opt['k']):
+        s_log += "domain "+str(i)+" NDCG: " + \
+            str(ndcgs[i])+" HIT: "+str(hits[i])+"\n"
+    s_log += "mean score: "+str(dev_score)
+    file_logger.log(s_log)
+    # file_logger.log("{}\ndomain {} NDCG: {} HIT: {}\ndomain {} NDCG: {} HIT: {}\ndomain {} NDCG: {} HIT: {}\nmean score: {}".format(epoch,
+    #                                                                                                                                 0, ndcgs[
+    #                                                                                                                                     0], hits[0],
+    #                                                                                                                                 1, ndcgs[
+    #                                                                                                                                     1], hits[1],
+    #                                                                                                                                 2, ndcgs[
+    #                                                                                                                                     2], hits[2],
+    #                                                                                                                                 dev_score))
 
     # save
     if epoch == 1 or dev_score > max(dev_score_history):
         print("new best model saved.")
+        torch.save(trainer.model.state_dict(), "./models_saved/"+opt['id'])
     if epoch % opt['save_epoch'] != 0:
         pass
 
